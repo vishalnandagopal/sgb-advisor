@@ -1,5 +1,7 @@
 from csv import reader as csv_reader
 from datetime import date, datetime
+from functools import lru_cache
+from logging import info as log_info
 from os.path import dirname
 
 from playwright.sync_api import sync_playwright
@@ -30,6 +32,9 @@ class SGB:
         self.maturity_date = maturity_date
         """The date on which the bond will mature. Used for calculating XIRR"""
 
+        self.xirr:float = 0
+        """XIRR which will be calculated and set later"""
+
     def __str__(self) -> str:
         return f"{self.nse_symbol} - Issue Price ₹{self.issue_price} - LTP ₹{self.ltp} - {self.interest_rate}% interest - {self.maturity_date}"
 
@@ -49,6 +54,7 @@ def read_scrips_file() -> list[list[str]]:
         return list(csv_contents)
 
 
+@lru_cache(maxsize=None)
 def get_sgbs() -> list[SGB]:
     NSE_SGB_URL: str = "https://www.nseindia.com/market-data/sovereign-gold-bond"
 
@@ -106,9 +112,11 @@ def get_sgbs() -> list[SGB]:
 
         browser.close()
 
+    log_info(f'Fetched all SGB data from NSE website. Sample - "{sgbs_trading[0]}"')
     return sgbs_trading
 
 
+@lru_cache(maxsize=None)
 def get_price_of_gold() -> float:
     # RBI uses IBJA
     IBJA_URL = "https://www.ibja.co/"
@@ -131,4 +139,8 @@ def get_price_of_gold() -> float:
 
         browser.close()
 
-    return float(_gold_price_str.replace("₹", "").strip()) if _gold_price_str else -1
+    gold_price = (
+        float(_gold_price_str.replace("₹", "").strip()) if _gold_price_str else -1
+    )
+    log_info(f"Fetched price of gold from IBJA as {gold_price}")
+    return gold_price
