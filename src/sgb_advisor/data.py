@@ -4,6 +4,7 @@ from functools import lru_cache
 from logging import info as log_info
 from os.path import dirname
 
+from playwright.sync_api import TimeoutError as PlaywrightTimeoutError
 from playwright.sync_api import sync_playwright
 from typing_extensions import TypeIs
 
@@ -32,7 +33,7 @@ class SGB:
         self.maturity_date = maturity_date
         """The date on which the bond will mature. Used for calculating XIRR"""
 
-        self.xirr:float = 0
+        self.xirr: float = 0
         """XIRR which will be calculated and set later"""
 
     def __str__(self) -> str:
@@ -68,7 +69,11 @@ def get_sgbs() -> list[SGB]:
         SGBNAME_QUERY_SEL = "#sgbTable > tbody > tr > td:nth-child(1)"
 
         # NSE website loads info after page load. So wait for this to appear
-        page.wait_for_selector(SGBLTP_QUERY_SEL)
+        try:
+            page.wait_for_selector(SGBLTP_QUERY_SEL, timeout=100000)
+        except PlaywrightTimeoutError:
+            # Sometimes it fails but succeeds on 2nd try. If it fails again we are letting it fail
+            page.wait_for_selector(SGBLTP_QUERY_SEL, timeout=200000)
 
         sgb_ltp_results = page.query_selector_all(selector=SGBLTP_QUERY_SEL)
         sgb_name_results = page.query_selector_all(selector=SGBNAME_QUERY_SEL)
@@ -106,7 +111,6 @@ def get_sgbs() -> list[SGB]:
                     )
                 )
 
-                ...
             except Exception as e:
                 print(f'Couldn\'t add "{name}" to sgb_values - {e}')
 
@@ -129,7 +133,10 @@ def get_price_of_gold() -> float:
 
         FINE_GOLD_PRICE_QUERY_SEL = "#lblFineGold999"
 
-        page.wait_for_selector(FINE_GOLD_PRICE_QUERY_SEL)
+        try:
+            page.wait_for_selector(FINE_GOLD_PRICE_QUERY_SEL, timeout=100000)
+        except PlaywrightTimeoutError:
+            page.wait_for_selector(FINE_GOLD_PRICE_QUERY_SEL, timeout=200000)
 
         _gold_price_element = page.query_selector(selector=FINE_GOLD_PRICE_QUERY_SEL)
 

@@ -14,3 +14,7 @@ wheels/
 # others
 .vscode/
 .DS_Store
+
+.github/
+.git/
+requirements.txt

@@ -1,30 +1,16 @@
 [project]
-name = "sgb-fair-value-calculator"
+name = "sgb-advisor"
 version = "0.1.0"
 description = "Add your description here"
-authors = [
-    { name = "Vishal N", email = "dev@vishalnandagopal.com" }
-]
+readme = "README.md"
+requires-python = ">=3.12"
 dependencies = [
     "pytest-playwright>=0.5.2",
     "pyxirr>=0.10.5",
 ]
-readme = "README.md"
-requires-python = ">= 3.10"
 
-[build-system]
-requires = ["hatchling"]
-build-backend = "hatchling.build"
-
-[tool.rye]
-managed = true
+[tool.uv]
 dev-dependencies = [
-    "mypy>=1.11.2",
     "icecream>=2.1.3",
+    "mypy>=1.11.2",
 ]
-
-[tool.hatch.metadata]
-allow-direct-references = true
-
-[tool.hatch.build.targets.wheel]
-packages = ["src/sgb_fair_value_calculator"]

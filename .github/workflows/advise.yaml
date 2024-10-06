@@ -1,0 +1,37 @@
+---
+name: SGB Advisor
+on:
+  schedule:
+    - cron: "0 6 * * 1"
+  push:
+    branches:
+      - master
+  workflow_dispatch:
+
+jobs:
+  run-sgb-advisor:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout the repo
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+      - name: Setup python and pip
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Setup UV
+        run: |
+          pip install uv
+          uv export --format requirements-txt --no-emit-project -o requirements.txt
+      - name: Install required modules from requirements.txt
+        run: |
+          # Installing required modules
+          pip install -r requirements.txt
+      - name: Setup playwright
+        run: |
+          playwright install firefox
+          playwright install-deps
+      - name: Run the script
+        id: run-python-file
+        run: python3 app.py

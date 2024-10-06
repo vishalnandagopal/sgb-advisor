@@ -1,4 +1,4 @@
-from sgb_fair_value_calculator import calculate_sgb_xirr, get_price_of_gold, get_sgbs
+from src.sgb_advisor import calculate_sgb_xirr, get_price_of_gold, get_sgbs
 
 all_sgbs = get_sgbs()
 
