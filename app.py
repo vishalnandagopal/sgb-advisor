@@ -1,13 +1,22 @@
-from src.sgb_advisor import calculate_sgb_xirr, get_price_of_gold, get_sgbs
+from src.sgb_advisor import (
+    NSE_SGB_URL,
+    get_sgbs,
+    logging,
+    write_html_to_file,
+    send_email,
+)
 
 all_sgbs = get_sgbs()
 
-current_gold_price = get_price_of_gold()
-max_sgb = all_sgbs[0]
 
-for sgb in all_sgbs:
-    sgb.xirr = calculate_sgb_xirr(sgb, current_gold_price)
-    if sgb.xirr > max_sgb.xirr:
-        max_sgb = sgb
+write_html_to_file(all_sgbs)
+send_email(all_sgbs)
 
-print(f"{max_sgb} will give you {max_sgb.xirr}% if gold price stays the same")
+if len(all_sgbs) > 0:
+    print(
+        f"{all_sgbs[0].nse_symbol} will give you {all_sgbs[0].xirr}% if gold price stays the same"
+    )
+else:
+    logging.error(
+        f"SGB list seems to be empty. Error when fetching from NSE? Check if anything exists on {NSE_SGB_URL}"
+    )

@@ -5,7 +5,9 @@ description = "Mathematically advises you on which SGB to buy"
 readme = "README.md"
 requires-python = ">=3.12"
 dependencies = [
+    "boto3>=1.35.34",
     "pytest-playwright>=0.5.2",
+    "python-dotenv>=1.0.1",
     "pyxirr>=0.10.5",
 ]
 

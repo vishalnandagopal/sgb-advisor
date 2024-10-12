@@ -10,12 +10,6 @@ RUN ["uv","export","--format","requirements-txt","--no-emit-project","-o", "requ
 
 FROM python:3.12-slim AS final
 
-# # Create a custom user with UID 1234 and GID 1234
-# RUN groupadd -g 1234 customgroup && \
-#     useradd -m -u 1234 -g customgroup vishal
-
-# USER vishal
-
 WORKDIR /sgb-advisor
 
 COPY --from=requirements-build /requirements.txt requirements.txt

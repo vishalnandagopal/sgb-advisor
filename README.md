@@ -37,11 +37,24 @@ This tries to use publically available data and maths to advise you on which SGB
     python app.py
     ```
 
+### Sending results via email
+
+Sending results to an email address using [Amazon SES](https://aws.amazon.com/ses/) is supported. Create an `.env` file in root of the project as per the following structure.
+
+You have to get the access keys from AWS console.
+
+```env
+AWS_ACCESS_KEY=xxx
+AWS_SECRET_ACCESS_KEY=xxx
+AWS_SES_SENDER_EMAIL=SGB Advisor <sgb-advisor@your-verified-domain.com>
+AWS_SES_RECIPIENT=test@your-verified-domain.com
+AWS_REGION=
+```
+
 ## License
 
 [GNU GPLv3](./LICENSE)
 
 ## TODO
 
-- Send results via email
-- Similar tool for ETFs tracking the same index.
+- Similar tool for finding arbritages in ETFs tracking the same index.

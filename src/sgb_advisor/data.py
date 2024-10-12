@@ -1,46 +1,17 @@
 from csv import reader as csv_reader
-from datetime import date, datetime
+from datetime import datetime
 from functools import lru_cache
-from logging import info as log_info
 from os.path import dirname
 
 from playwright.sync_api import TimeoutError as PlaywrightTimeoutError
 from playwright.sync_api import sync_playwright
 from typing_extensions import TypeIs
 
+from .logger import logging
+from .models import SGB
+from .quick_mafs import calculate_sgb_xirr
 
-class SGB:
-    def __init__(
-        self,
-        nse_symbol: str,
-        ltp: float,
-        issue_price: float | int,
-        interest_rate: float,
-        maturity_date: date,
-    ):
-        self.nse_symbol = nse_symbol
-        """Symbol with which it trades on NSE"""
-
-        self.ltp = ltp
-        """Last traded price, parsed from the URL given in NSE_SGB_URL"""
-
-        self.issue_price = issue_price
-        """Price at which RBI issued the bond. Used to calculate interest that will be paid"""
-
-        self.interest_rate = interest_rate
-        """Fixed interest rate paid twice a year. 2.75% for older bonds, 2.5% for the newer ones"""
-
-        self.maturity_date = maturity_date
-        """The date on which the bond will mature. Used for calculating XIRR"""
-
-        self.xirr: float = 0
-        """XIRR which will be calculated and set later"""
-
-    def __str__(self) -> str:
-        return f"{self.nse_symbol} - Issue Price ₹{self.issue_price} - LTP ₹{self.ltp} - {self.interest_rate}% interest - {self.maturity_date}"
-
-    def __repr__(self) -> str:
-        return str(self)
+NSE_SGB_URL: str = "https://www.nseindia.com/market-data/sovereign-gold-bond"
 
 
 def read_scrips_file() -> list[list[str]]:
@@ -57,8 +28,6 @@ def read_scrips_file() -> list[list[str]]:
 
 @lru_cache(maxsize=None)
 def get_sgbs() -> list[SGB]:
-    NSE_SGB_URL: str = "https://www.nseindia.com/market-data/sovereign-gold-bond"
-
     with sync_playwright() as p:
         browser = p.firefox.launch()
         page = browser.new_page()
@@ -72,8 +41,16 @@ def get_sgbs() -> list[SGB]:
         try:
             page.wait_for_selector(SGBLTP_QUERY_SEL, timeout=100000)
         except PlaywrightTimeoutError:
-            # Sometimes it fails but succeeds on 2nd try. If it fails again we are letting it fail
-            page.wait_for_selector(SGBLTP_QUERY_SEL, timeout=200000)
+            # Sometimes it fails but succeeds on 2nd try.
+            logging.warning(
+                "Failed to fetch SGB info from NSE site when trying for the first time. Trying again"
+            )
+            try:
+                page.wait_for_selector(SGBLTP_QUERY_SEL, timeout=200000)
+            except PlaywrightTimeoutError:
+                # If it fails again we are letting it
+                logging.error("Could not fetch SGBs info from NSE site")
+                exit()
 
         sgb_ltp_results = page.query_selector_all(selector=SGBLTP_QUERY_SEL)
         sgb_name_results = page.query_selector_all(selector=SGBNAME_QUERY_SEL)
@@ -116,7 +93,14 @@ def get_sgbs() -> list[SGB]:
 
         browser.close()
 
-    log_info(f'Fetched all SGB data from NSE website. Sample - "{sgbs_trading[0]}"')
+    logging.info(f'Fetched all SGB data from NSE website. Sample - "{sgbs_trading[0]}"')
+
+    for sgb in sgbs_trading:
+        sgb.xirr = calculate_sgb_xirr(sgb, current_gold_price)
+
+    # Sorts in descending order of XIRR
+    sgbs_trading.sort(key=lambda x: x.xirr, reverse=True)
+
     return sgbs_trading
 
 
@@ -149,5 +133,8 @@ def get_price_of_gold() -> float:
     gold_price = (
         float(_gold_price_str.replace("₹", "").strip()) if _gold_price_str else -1
     )
-    log_info(f"Fetched price of gold from IBJA as {gold_price}")
+    logging.info(f"Fetched price of gold from IBJA as {gold_price}")
     return gold_price
+
+
+current_gold_price = get_price_of_gold()

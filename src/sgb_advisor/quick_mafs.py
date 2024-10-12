@@ -1,10 +1,10 @@
 from calendar import monthrange
 from datetime import date, datetime
-from logging import info as log_info, error as log_error
 
 from pyxirr import xirr
 
-from .data import SGB
+from .logger import logging
+from .models import SGB
 
 
 def calculate_sgb_xirr(sgb: SGB, current_gold_price: float):
@@ -40,9 +40,7 @@ def calculate_sgb_xirr(sgb: SGB, current_gold_price: float):
     x: float | None = xirr(payment_dates, amounts)
 
     if not x:
-        log_error(f"Couldn't calculate XIRR for {sgb.nse_symbol}")
+        logging.error(f"Couldn't calculate XIRR for {sgb.nse_symbol}")
         return 0
 
-    log_info(f"Calculated XIRR of {sgb.nse_symbol} as {round(x,3)}")
-
-    return round(x, 3)
+    return round(x * 100, 3)
