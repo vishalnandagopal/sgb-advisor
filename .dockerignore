@@ -19,4 +19,4 @@ wheels/
 .github/
 .git/
 requirements.txt
-*.html
+output/

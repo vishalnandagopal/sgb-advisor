@@ -3,11 +3,32 @@ from datetime import date, datetime
 
 from pyxirr import xirr
 
-from .logger import logging
+from .logger import logger
 from .models import SGB
 
 
-def calculate_sgb_xirr(sgb: SGB, current_gold_price: float):
+def calculate_sgb_xirr(sgb: SGB, current_gold_price: float) -> float:
+    """
+    Calculates the XIRR on an SGB. It assumes you are buying at the last traded price and that the RBI will redeem it only at the current price set by IBJA.
+
+    Parameters
+    ----------
+    sgb : SGB
+        The SGB object
+    current_gold_price: float
+        The actual gold price, preferably from IBJA
+
+    Returns
+    -------
+    float
+        Returns the calculated XIRR in percentage terms
+
+    Examples
+    --------
+    >>> calculate_sgb_xirr(SGB_object, 7490)
+    13.90
+
+    """
     maturity = sgb.maturity_date
     today: date = datetime.now().date()
 
@@ -32,15 +53,21 @@ def calculate_sgb_xirr(sgb: SGB, current_gold_price: float):
 
     amounts = [sgb.issue_price * sgb.interest_rate / 100] * len(payment_dates)
 
+    # Since you are buying the bond now at it's LTP, the cashflow is negative as it is flowing out of your pocket.
+    # Concept of true value does not come in here since you have already decided to buy the SGB, and the only choice is to buy it at it's current traded price.
     amounts.append(-sgb.ltp)
     payment_dates.append(today)
+
+    # Assuming it will mature at the same price as today, which is it's true value, cashflow on that day will be positive since it is coming back into your wallet.
+    # Concept of true value comes in here since RBI will only pay the you redemption price as per the price set by IBJA and not the price at which it is trading
     amounts.append(current_gold_price)
     payment_dates.append(maturity)
 
+    # Thanks to the pyxirr module for making XIRR calculations really easy
     x: float | None = xirr(payment_dates, amounts)
 
     if not x:
-        logging.error(f"Couldn't calculate XIRR for {sgb.nse_symbol}")
+        logger.error(f"Couldn't calculate XIRR for {sgb.nse_symbol}")
         return 0
 
     return round(x * 100, 3)

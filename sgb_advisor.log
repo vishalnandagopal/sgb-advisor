@@ -1,0 +1,82 @@
+2024-10-13 01:14:18.935 | ERROR    | __main__:<module>:24 - SGB list seems to be empty. Error when fetching from NSE? Check if anything exists on https://www.nseindia.com/market-data/sovereign-gold-bond
+2024-10-29 01:52:44.017 | ERROR    | src.sgb_advisor.notify.teleg:test_bot_status:83 - Telegram bot not able to authenticate. Error - Not Found
+2024-10-29 01:52:44.563 | ERROR    | src.sgb_advisor.notify.teleg:check_chat_id:113 - Could not find chat corresponding to chat_id - 0. Error - Not Found
+2024-10-29 01:53:59.107 | ERROR    | src.sgb_advisor.notify.teleg:test_bot_status:83 - Telegram bot not able to authenticate. Error - Not Found
+2024-10-29 01:54:00.235 | ERROR    | src.sgb_advisor.notify.teleg:check_chat_id:113 - Could not find chat corresponding to chat_id - 0. Error - Not Found
+2024-10-29 01:55:08.377 | ERROR    | src.sgb_advisor.notify.teleg:test_bot_status:85 - Telegram bot not able to authenticate. Error - Not Found
+2024-10-29 01:55:08.841 | ERROR    | src.sgb_advisor.notify.teleg:check_chat_id:115 - Could not find chat corresponding to chat_id - 0. Error - Not Found
+2024-10-29 01:55:53.989 | ERROR    | src.sgb_advisor.notify.teleg:test_bot_status:86 - Telegram bot not able to authenticate. Error - Not Found
+2024-10-29 01:55:54.519 | ERROR    | src.sgb_advisor.notify.teleg:check_chat_id:116 - Could not find chat corresponding to chat_id - 0. Error - Not Found
+2024-10-29 02:00:12.075 | ERROR    | src.sgb_advisor.notify.teleg:test_bot_status:90 - Telegram bot not able to authenticate. Error - Not Found
+2024-10-29 02:00:12.545 | ERROR    | src.sgb_advisor.notify.teleg:check_chat_id:120 - Could not find chat corresponding to chat_id - 0. Error - Not Found
+2024-10-29 02:00:40.777 | ERROR    | src.sgb_advisor.notify.teleg:test_bot_status:92 - Telegram bot not able to authenticate. Error - Not Found
+2024-10-29 02:00:41.255 | ERROR    | src.sgb_advisor.notify.teleg:check_chat_id:122 - Could not find chat corresponding to chat_id - 0. Error - Not Found
+2024-10-29 02:01:30.364 | ERROR    | src.sgb_advisor.notify.teleg:test_bot_status:92 - Telegram bot not able to authenticate. Error - Not Found
+2024-10-29 02:01:30.822 | ERROR    | src.sgb_advisor.notify.teleg:check_chat_id:122 - Could not find chat corresponding to chat_id - 0. Error - Not Found
+2024-10-29 02:02:52.712 | ERROR    | src.sgb_advisor.notify.teleg:test_bot_status:92 - Telegram bot not able to authenticate. Error - Not Found
+2024-10-29 02:02:53.173 | ERROR    | src.sgb_advisor.notify.teleg:check_chat_id:122 - Could not find chat corresponding to chat_id - 0. Error - Not Found
+2024-10-29 02:07:05.401 | INFO     | src.sgb_advisor.notify.teleg:test_bot_status:85 - Telegram bot is be authenticated and running at "@sgbadvisorbot"
+2024-10-29 02:07:06.042 | INFO     | src.sgb_advisor.notify.teleg:check_chat_id:115 - Chat ID is valid and corresponds to username "@heliozelio".
+2024-10-29 02:07:44.738 | INFO     | src.sgb_advisor.notify.teleg:test_bot_status:85 - Telegram bot is be authenticated and running at "@sgbadvisorbot"
+2024-10-29 02:07:45.209 | INFO     | src.sgb_advisor.notify.teleg:check_chat_id:115 - Chat ID is valid and corresponds to username "@heliozelio".
+2024-10-29 02:12:44.083 | INFO     | src.sgb_advisor.notify.teleg:test_bot_status:88 - Telegram bot is be authenticated and running at "@sgbadvisorbot"
+2024-10-29 02:12:44.776 | INFO     | src.sgb_advisor.notify.teleg:check_chat_id:118 - Chat ID is valid and corresponds to username "@heliozelio".
+2024-10-29 02:12:45.477 | INFO     | src.sgb_advisor.notify.teleg:send_telegram_message:55 - Succesfully sent message to heliozelio with message_id 6
+2024-10-29 02:13:14.262 | INFO     | src.sgb_advisor.notify.teleg:test_bot_status:88 - Telegram bot is be authenticated and running at "@sgbadvisorbot"
+2024-10-29 02:13:14.749 | INFO     | src.sgb_advisor.notify.teleg:check_chat_id:118 - Chat ID is valid and corresponds to username "@heliozelio".
+2024-10-29 02:13:15.514 | INFO     | src.sgb_advisor.notify.teleg:send_telegram_message:55 - Succesfully sent message to "@heliozelio" with message_id 7
+2024-10-29 02:13:45.065 | INFO     | src.sgb_advisor.notify.teleg:test_bot_status:88 - Telegram bot is be authenticated and running at "@sgbadvisorbot"
+2024-10-29 02:13:45.711 | INFO     | src.sgb_advisor.notify.teleg:check_chat_id:118 - Chat ID is valid and corresponds to username "@heliozelio".
+2024-10-29 02:13:46.348 | INFO     | src.sgb_advisor.notify.teleg:send_telegram_message:55 - Succesfully sent message to @heliozelio with message_id 8
+2024-10-29 02:13:57.659 | INFO     | src.sgb_advisor.notify.teleg:test_bot_status:88 - Telegram bot is be authenticated and running at "@sgbadvisorbot"
+2024-10-29 02:13:58.149 | INFO     | src.sgb_advisor.notify.teleg:check_chat_id:118 - Chat ID is valid and corresponds to username "@heliozelio".
+2024-10-29 02:13:58.805 | INFO     | src.sgb_advisor.notify.teleg:send_telegram_message:55 - Succesfully sent message to @heliozelio with message_id 9
+2024-10-29 02:21:08.608 | INFO     | src.sgb_advisor.notify.teleg:test_bot_status:91 - Telegram bot is be authenticated and running at "@sgbadvisorbot"
+2024-10-29 02:21:10.046 | INFO     | src.sgb_advisor.notify.teleg:check_chat_id:121 - Chat ID is valid and corresponds to username "@heliozelio".
+2024-10-29 02:21:11.551 | INFO     | src.sgb_advisor.notify.teleg:send_telegram_message:58 - Succesfully sent message to @heliozelio with message_id 10
+2024-10-29 02:21:53.125 | INFO     | src.sgb_advisor.notify.teleg:test_bot_status:88 - Telegram bot is be authenticated and running at "@sgbadvisorbot"
+2024-10-29 02:21:53.666 | INFO     | src.sgb_advisor.notify.teleg:check_chat_id:118 - Chat ID is valid and corresponds to username "@heliozelio".
+2024-10-29 02:21:56.411 | INFO     | src.sgb_advisor.notify.teleg:send_telegram_message:55 - Succesfully sent message to @heliozelio with message_id 11
+2024-10-29 02:22:14.406 | INFO     | src.sgb_advisor.notify.teleg:test_bot_status:88 - Telegram bot is be authenticated and running at "@sgbadvisorbot"
+2024-10-29 02:22:15.248 | INFO     | src.sgb_advisor.notify.teleg:check_chat_id:118 - Chat ID is valid and corresponds to username "@heliozelio".
+2024-10-29 02:22:16.937 | INFO     | src.sgb_advisor.notify.teleg:send_telegram_message:55 - Succesfully sent message to @heliozelio with message_id 12
+2024-10-29 02:23:50.338 | INFO     | src.sgb_advisor.notify.teleg:test_bot_status:88 - Telegram bot is be authenticated and running at "@sgbadvisorbot"
+2024-10-29 02:23:51.788 | INFO     | src.sgb_advisor.notify.teleg:check_chat_id:118 - Chat ID is valid and corresponds to username "@heliozelio".
+2024-10-29 02:23:52.503 | INFO     | src.sgb_advisor.notify.teleg:send_telegram_message:55 - Succesfully sent message to @heliozelio with message_id 13
+2024-10-29 02:24:09.167 | INFO     | src.sgb_advisor.notify.teleg:test_bot_status:90 - Telegram bot is be authenticated and running at "@sgbadvisorbot"
+2024-10-29 02:24:09.635 | INFO     | src.sgb_advisor.notify.teleg:check_chat_id:120 - Chat ID is valid and corresponds to username "@heliozelio".
+2024-10-29 02:24:10.328 | INFO     | src.sgb_advisor.notify.teleg:send_telegram_message:57 - Succesfully sent message to @heliozelio with message_id 14
+2024-10-29 02:24:27.649 | INFO     | src.sgb_advisor.notify.teleg:test_bot_status:88 - Telegram bot is be authenticated and running at "@sgbadvisorbot"
+2024-10-29 02:24:28.112 | INFO     | src.sgb_advisor.notify.teleg:check_chat_id:118 - Chat ID is valid and corresponds to username "@heliozelio".
+2024-10-29 02:24:28.786 | INFO     | src.sgb_advisor.notify.teleg:send_telegram_message:55 - Succesfully sent message to @heliozelio with message_id 15
+2024-10-29 02:29:48.962 | INFO     | src.sgb_advisor.notify.teleg:test_bot_status:89 - Telegram bot is be authenticated and running at "@sgbadvisorbot"
+2024-10-29 02:29:49.614 | INFO     | src.sgb_advisor.notify.teleg:check_chat_id:119 - Chat ID is valid and corresponds to username "@heliozelio".
+2024-10-29 02:29:50.281 | INFO     | src.sgb_advisor.notify.teleg:send_telegram_message:56 - Succesfully sent message to @heliozelio with message_id 16
+2024-10-29 02:29:58.988 | INFO     | src.sgb_advisor.notify.teleg:test_bot_status:89 - Telegram bot is be authenticated and running at "@sgbadvisorbot"
+2024-10-29 02:29:59.463 | INFO     | src.sgb_advisor.notify.teleg:check_chat_id:119 - Chat ID is valid and corresponds to username "@heliozelio".
+2024-10-29 02:30:00.111 | INFO     | src.sgb_advisor.notify.teleg:send_telegram_message:56 - Succesfully sent message to @heliozelio with message_id 17
+2024-10-29 02:35:14.634 | INFO     | src.sgb_advisor.notify.teleg:test_bot_status:91 - Telegram bot is be authenticated and running at "@sgbadvisorbot"
+2024-10-29 02:35:15.306 | INFO     | src.sgb_advisor.notify.teleg:check_chat_id:121 - Chat ID is valid and corresponds to username "@heliozelio".
+2024-10-29 02:35:15.978 | INFO     | src.sgb_advisor.notify.teleg:send_telegram_message:58 - Succesfully sent message to @heliozelio with message_id 18
+2024-10-29 02:36:51.281 | INFO     | src.sgb_advisor.notify.teleg:test_bot_status:99 - Telegram bot is be authenticated and running at "@sgbadvisorbot"
+2024-10-29 02:36:51.991 | INFO     | src.sgb_advisor.notify.teleg:check_chat_id:129 - Chat ID is valid and corresponds to username "@heliozelio".
+2024-10-29 02:36:52.656 | INFO     | src.sgb_advisor.notify.teleg:send_telegram_message:66 - Succesfully sent message to @heliozelio with message_id 19
+2024-10-29 02:40:03.486 | INFO     | src.sgb_advisor.notify.teleg:test_bot_status:95 - Telegram bot is be authenticated and running at "@sgbadvisorbot"
+2024-10-29 02:40:04.193 | INFO     | src.sgb_advisor.notify.teleg:check_chat_id:125 - Chat ID is valid and corresponds to username "@heliozelio".
+2024-10-29 02:40:04.651 | ERROR    | src.sgb_advisor.notify.teleg:send_telegram_message:67 - Could not sent message to 735210822. Error - Bad Request: there is no photo in the request
+2024-10-29 02:43:33.726 | INFO     | src.sgb_advisor.notify.teleg:test_bot_status:95 - Telegram bot is be authenticated and running at "@sgbadvisorbot"
+2024-10-29 02:43:34.384 | INFO     | src.sgb_advisor.notify.teleg:check_chat_id:125 - Chat ID is valid and corresponds to username "@heliozelio".
+2024-10-29 02:43:35.257 | ERROR    | src.sgb_advisor.notify.teleg:send_telegram_message:67 - Could not sent message to 735210822. Error - Bad Request: wrong remote file identifier specified: Wrong character in the string
+2024-10-29 02:44:40.460 | INFO     | src.sgb_advisor.notify.teleg:test_bot_status:95 - Telegram bot is be authenticated and running at "@sgbadvisorbot"
+2024-10-29 02:44:41.165 | INFO     | src.sgb_advisor.notify.teleg:check_chat_id:125 - Chat ID is valid and corresponds to username "@heliozelio".
+2024-10-29 02:44:42.613 | INFO     | src.sgb_advisor.notify.teleg:send_telegram_message:62 - Succesfully sent message to @heliozelio with message_id 20
+2024-10-29 02:49:31.400 | INFO     | src.sgb_advisor.notify.teleg:test_bot_status:130 - Telegram bot is be authenticated and running at "@sgbadvisorbot"
+2024-10-29 02:49:32.070 | INFO     | src.sgb_advisor.notify.teleg:check_chat_id:160 - Chat ID is valid and corresponds to username "@heliozelio".
+2024-10-29 02:49:32.742 | INFO     | src.sgb_advisor.notify.teleg:send_message:53 - Succesfully sent message to @heliozelio with message_id 21
+2024-10-29 13:34:01.403 | INFO     | src.sgb_advisor.data:get_sgbs:137 - Fetched all SGB data from NSE website. Sample - "SGBJUL27 - Issued at ₹3443.0 - LTP ₹8550.0 - 2.5% interest - 2027-07-16"
+2024-10-29 13:34:18.175 | INFO     | src.sgb_advisor.data:get_price_of_gold:195 - Fetched price of gold from IBJA as 7885.0
+2024-10-29 13:34:21.724 | INFO     | src.sgb_advisor.notify.email_sender:send_email:203 - Email sent to ! Message ID: 01000192d74def74-c9dd51e2-f633-4ca1-819e-7e829b3dff10-000000
+2024-10-29 13:38:54.547 | INFO     | src.sgb_advisor.data:get_sgbs:81 - Trying to fetch list of SGBs from https://www.nseindia.com/market-data/sovereign-gold-bond
+2024-10-29 13:38:59.692 | INFO     | src.sgb_advisor.data:get_sgbs:139 - Fetched all SGB data from NSE website. Sample - "SGBJUL27 - Issued at ₹3443.0 - LTP ₹8550.0 - 2.5% interest - 2027-07-16"
+2024-10-29 13:39:17.429 | INFO     | src.sgb_advisor.data:get_price_of_gold:197 - Fetched price of gold from IBJA as 7885.0
+2024-10-29 13:39:20.015 | INFO     | src.sgb_advisor.notify.email_sender:send_email:203 - Email sent to ! Message ID: 01000192d7527c5a-6bf4f361-88ba-44c3-9ba2-05baccec373a-000000

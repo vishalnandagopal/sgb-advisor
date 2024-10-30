@@ -7,7 +7,7 @@ from playwright.sync_api import TimeoutError as PlaywrightTimeoutError
 from playwright.sync_api import sync_playwright
 from typing_extensions import TypeIs
 
-from .logger import logging
+from .logger import logger
 from .models import SGB
 from .quick_mafs import calculate_sgb_xirr
 
@@ -32,6 +32,7 @@ def get_sgbs() -> list[SGB]:
         browser = p.firefox.launch()
         page = browser.new_page()
 
+        logger.info(f"Fetchin NSE SGB page at {NSE_SGB_URL}")
         page.goto(NSE_SGB_URL, timeout=100000)
 
         SGBLTP_QUERY_SEL = "#sgbTable > tbody > tr > td:nth-child(7)"
@@ -42,14 +43,14 @@ def get_sgbs() -> list[SGB]:
             page.wait_for_selector(SGBLTP_QUERY_SEL, timeout=100000)
         except PlaywrightTimeoutError:
             # Sometimes it fails but succeeds on 2nd try.
-            logging.warning(
+            logger.warning(
                 "Failed to fetch SGB info from NSE site when trying for the first time. Trying again"
             )
             try:
                 page.wait_for_selector(SGBLTP_QUERY_SEL, timeout=200000)
             except PlaywrightTimeoutError:
                 # If it fails again we are letting it
-                logging.error("Could not fetch SGBs info from NSE site")
+                logger.error("Could not fetch SGBs info from NSE site")
                 exit()
 
         sgb_ltp_results = page.query_selector_all(selector=SGBLTP_QUERY_SEL)
@@ -93,7 +94,11 @@ def get_sgbs() -> list[SGB]:
 
         browser.close()
 
-    logging.info(f'Fetched all SGB data from NSE website. Sample - "{sgbs_trading[0]}"')
+    logger.info(
+        f'Fetched all SGB data from NSE website. Sample data - "{sgbs_trading[0]}"'
+    )
+
+    current_gold_price = get_price_of_gold()
 
     for sgb in sgbs_trading:
         sgb.xirr = calculate_sgb_xirr(sgb, current_gold_price)
@@ -113,6 +118,7 @@ def get_price_of_gold() -> float:
         browser = p.firefox.launch()
         page = browser.new_page()
 
+        logger.info(f"Fetchin IBJA page at {IBJA_URL}")
         page.goto(IBJA_URL, timeout=100000)
 
         FINE_GOLD_PRICE_QUERY_SEL = "#lblFineGold999"
@@ -133,8 +139,5 @@ def get_price_of_gold() -> float:
     gold_price = (
         float(_gold_price_str.replace("₹", "").strip()) if _gold_price_str else -1
     )
-    logging.info(f"Fetched price of gold from IBJA as {gold_price}")
+    logger.info(f"Fetched price of gold from IBJA as {gold_price}")
     return gold_price
-
-
-current_gold_price = get_price_of_gold()

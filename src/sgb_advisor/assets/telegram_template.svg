@@ -1,0 +1,159 @@
+<svg xmlns="http://www.w3.org/2000/svg"
+    xmlns:xlink="http://www.w3.org/1999/xlink">
+    <style>
+        <![CDATA[
+            rect.rectClass {
+                stroke: #000066;
+                fill:   #00cc00;
+            }
+            circle.circleClass {
+                stroke: #006600;
+                fill:   #cc0000;
+            }
+            roboto {
+                font-family: "Roboto-Bold,Roboto";
+                font-size: 2rem;
+            }
+        ]]>
+    </style>
+    <g id="table">
+        <rect transform="translate(0 0)" width="992" height="48" fill="#ffffff"></rect>
+        <rect transform="translate(0 0)" width="992" height="1" fill="#e0e0e0"></rect>
+        <rect transform="translate(0 48)" width="992" height="48" fill="#ffffff"></rect>
+        <rect transform="translate(0 48)" width="992" height="1" fill="#e0e0e0"></rect>
+        <rect transform="translate(0 96)" width="992" height="48" fill="#ffffff"></rect>
+        <rect transform="translate(0 96)" width="992" height="1" fill="#e0e0e0"></rect>
+        <rect transform="translate(0 144)" width="992" height="48" fill="#ffffff"></rect>
+        <rect transform="translate(0 144)" width="992" height="1" fill="#e0e0e0"></rect>
+        <rect transform="translate(0 192)" width="992" height="48" fill="#ffffff"></rect>
+        <rect transform="translate(0 192)" width="992" height="1" fill="#e0e0e0"></rect>
+        <rect transform="translate(0 240)" width="992" height="48" fill="#ffffff"></rect>
+        <rect transform="translate(0 240)" width="992" height="1" fill="#e0e0e0"></rect>
+        <rect transform="translate(0 288)" width="992" height="48" fill="#ffffff"></rect>
+        <rect transform="translate(0 288)" width="992" height="1" fill="#e0e0e0"></rect>
+        <rect transform="translate(0 336)" width="992" height="48" fill="#ffffff"></rect>
+        <rect transform="translate(0 336)" width="992" height="1" fill="#e0e0e0"></rect>
+        <rect transform="translate(0 384)" width="992" height="48" fill="#ffffff"></rect>
+        <rect transform="translate(0 384)" width="992" height="1" fill="#e0e0e0"></rect>
+        <rect transform="translate(0 432)" width="992" height="48" fill="#ffffff"></rect>
+        <rect transform="translate(0 432)" width="992" height="1" fill="#e0e0e0"></rect>
+        <rect transform="translate(0 480)" width="992" height="48" fill="#ffffff"></rect>
+        <rect transform="translate(0 480)" width="992" height="1" fill="#e0e0e0"></rect>
+        <g>
+            <text transform="translate(84 29)" font-size="14" font-family="Roboto-Bold,Roboto">
+                <tspan x="0" y="0" style="font-weight:bold;">NSE Symbol</tspan>
+            </text>
+            <text transform="translate(17 77)" font-size="14" font-family="Roboto-Regular,Roboto">
+                <tspan x="0" y="0">Rerum cupiditate repellendus.</tspan>
+            </text>
+            <text transform="translate(17 125)" font-size="14" font-family="Roboto-Regular,Roboto">
+                <tspan x="0" y="0">Nesciunt et maxime.</tspan>
+            </text>
+            <text transform="translate(17 173)" font-size="14" font-family="Roboto-Regular,Roboto">
+                <tspan x="0" y="0">Laboriosam culpa libero.</tspan>
+            </text>
+            <text transform="translate(17 221)" font-size="14" font-family="Roboto-Regular,Roboto">
+                <tspan x="0" y="0">Qui quidem voluptatibus.</tspan>
+            </text>
+            <text transform="translate(17 269)" font-size="14" font-family="Roboto-Regular,Roboto">
+                <tspan x="0" y="0">Voluptates sunt accusamus.</tspan>
+            </text>
+            <text transform="translate(17 317)" font-size="14" font-family="Roboto-Regular,Roboto">
+                <tspan x="0" y="0">Qui corporis est.</tspan>
+            </text>
+            <text transform="translate(17 365)" font-size="14" font-family="Roboto-Regular,Roboto">
+                <tspan x="0" y="0">Ipsam repellat quis.</tspan>
+            </text>
+            <text transform="translate(17 413)" font-size="14" font-family="Roboto-Regular,Roboto">
+                <tspan x="0" y="0">Blanditiis dolore numquam.</tspan>
+            </text>
+            <text transform="translate(17 461)" font-size="14" font-family="Roboto-Regular,Roboto">
+                <tspan x="0" y="0">Veniam dolorem et.</tspan>
+            </text>
+            <text transform="translate(17 509)" font-size="14" font-family="Roboto-Regular,Roboto">
+                <tspan x="0" y="0">Tenetur delectus nihil.</tspan>
+            </text>
+        </g>
+        <g>
+            <text transform="translate(360 29)" font-size="14" font-family="Roboto-Bold,Roboto">
+                <tspan x="0" y="0" style="font-weight:bold;">LTP</tspan>
+            </text>
+            <text transform="translate(265 77)" font-size="14" font-family="Roboto-Regular,Roboto">
+                <tspan x="0" y="0">Text 1</tspan>
+            </text>
+            <text transform="translate(265 125)" font-size="14" font-family="Roboto-Regular,Roboto">
+                <tspan x="0" y="0">Text 1</tspan>
+            </text>
+            <text transform="translate(265 173)" font-size="14" font-family="Roboto-Regular,Roboto">
+                <tspan x="0" y="0">Text 1</tspan>
+            </text>
+            <text transform="translate(265 221)" font-size="14" font-family="Roboto-Regular,Roboto">
+                <tspan x="0" y="0">Text 1</tspan>
+            </text>
+            <text transform="translate(265 269)" font-size="14" font-family="Roboto-Regular,Roboto">
+                <tspan x="0" y="0">Text 1</tspan>
+            </text>
+            <text transform="translate(265 317)" font-size="14" font-family="Roboto-Regular,Roboto">
+                <tspan x="0" y="0">Text 1</tspan>
+            </text>
+            <text transform="translate(265 365)" font-size="14" font-family="Roboto-Regular,Roboto">
+                <tspan x="0" y="0">Text 1</tspan>
+            </text>
+            <text transform="translate(265 413)" font-size="14" font-family="Roboto-Regular,Roboto">
+                <tspan x="0" y="0">Text 1</tspan>
+            </text>
+            <text transform="translate(265 461)" font-size="14" font-family="Roboto-Regular,Roboto">
+                <tspan x="0" y="0">Text 1</tspan>
+            </text>
+            <text transform="translate(265 509)" font-size="14" font-family="Roboto-Regular,Roboto">
+                <tspan x="0" y="0">Text 1</tspan>
+            </text>
+        </g>
+        <rect transform="translate(248 0)" width="1" height="528" fill="#e0e0e0"></rect>
+        <g>
+            <text transform="translate(574 29)" font-size="14" font-family="Roboto-Bold,Roboto">
+                <tspan x="0" y="0" style="font-weight:bold;">Maturity Date</tspan>
+            </text>
+        </g>
+        <rect transform="translate(496 0)" width="1" height="528" fill="#e0e0e0"></rect>
+        <g>
+            <text transform="translate(852 29)" font-size="14" font-family="Roboto-Bold,Roboto">
+                <tspan x="0" y="0" style="font-weight:bold;">XIRR</tspan>
+            </text>
+            <text transform="translate(761 77)" font-size="14" font-family="Roboto-Regular,Roboto">
+                <tspan x="0" y="0">Text 3</tspan>
+            </text>
+            <text transform="translate(761 125)" font-size="14" font-family="Roboto-Regular,Roboto">
+                <tspan x="0" y="0">Text 3</tspan>
+            </text>
+            <text transform="translate(761 173)" font-size="14" font-family="Roboto-Regular,Roboto">
+                <tspan x="0" y="0">Text 3</tspan>
+            </text>
+            <text transform="translate(761 221)" font-size="14" font-family="Roboto-Regular,Roboto">
+                <tspan x="0" y="0">Text 3</tspan>
+            </text>
+            <text transform="translate(761 269)" font-size="14" font-family="Roboto-Regular,Roboto">
+                <tspan x="0" y="0">Text 3</tspan>
+            </text>
+            <text transform="translate(761 317)" font-size="14" font-family="Roboto-Regular,Roboto">
+                <tspan x="0" y="0">Text 3</tspan>
+            </text>
+            <text transform="translate(761 365)" font-size="14" font-family="Roboto-Regular,Roboto">
+                <tspan x="0" y="0">Text 3</tspan>
+            </text>
+            <text transform="translate(761 413)" font-size="14" font-family="Roboto-Regular,Roboto">
+                <tspan x="0" y="0">Text 3</tspan>
+            </text>
+            <text transform="translate(761 461)" font-size="14" font-family="Roboto-Regular,Roboto">
+                <tspan x="0" y="0">Text 3</tspan>
+            </text>
+            <text transform="translate(761 509)" font-size="14" font-family="Roboto-Regular,Roboto">
+                <tspan x="0" y="0">Text 3</tspan>
+            </text>
+        </g>
+        <rect transform="translate(744 0)" width="1" height="528" fill="#e0e0e0"></rect>
+        <rect transform="translate(0 0)" width="1" height="528" fill="#e0e0e0"></rect>
+        <rect transform="translate(991 0)" width="1" height="528" fill="#e0e0e0"></rect>
+    </g>
+    <rect transform="translate(0 528)" width="992" height="1" fill="#e0e0e0"></rect>
+</svg>

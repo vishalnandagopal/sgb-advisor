@@ -1,5 +1,4 @@
-import logging
+from loguru import logger as log
 
-logging.basicConfig(
-    format="%(levelname)s - %(message)s - %(asctime)s", level=logging.INFO
-)
+logger = log
+logger.add("sgb_advisor.log")

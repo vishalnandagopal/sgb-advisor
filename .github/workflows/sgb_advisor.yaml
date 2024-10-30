@@ -20,11 +20,11 @@ jobs:
         uses: actions/setup-python@v5
         with:
           python-version: "3.12"
+          cache: "pip" # caching pip dependencies
       - name: Install requirements
         run: |
-          pip install uv
-          uv export --format requirements-txt --no-emit-project -o requirements.txt
-          # Installing required modules
+          python -m venv .venv
+          source .venv\scripts
           pip install -r requirements.txt
       - name: Setup playwright
         run: |
