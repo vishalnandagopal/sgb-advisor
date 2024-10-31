@@ -21,13 +21,9 @@ jobs:
         with:
           python-version: "3.12"
           cache: "pip" # caching pip dependencies
-      - name: Install requirements
+      - name: Install requirements and setup playwright
         run: |
-          python -m venv .venv
-          source .venv\scripts
           pip install -r requirements.txt
-      - name: Setup playwright
-        run: |
           playwright install firefox
           playwright install-deps
       - name: Run the script
