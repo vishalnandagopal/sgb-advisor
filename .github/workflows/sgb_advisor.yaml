@@ -26,5 +26,6 @@ jobs:
           pip install -r requirements.txt
           playwright install firefox
           playwright install-deps
+          cd sgb_advisor
       - name: Run the script
         run: python3 app.py
