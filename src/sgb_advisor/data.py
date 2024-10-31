@@ -17,6 +17,9 @@ NSE_SGB_URL = "https://www.nseindia.com/market-data/sovereign-gold-bond"
 IBJA_URL = "https://www.ibja.co/"
 
 
+NSESiteNotLoadedError = RuntimeError("NSE Site doesn't seem to have loaded this time")
+
+
 def read_scrips_file() -> list[list[str]]:
     """Returns scrips.csv which is of the format
 
@@ -30,7 +33,7 @@ def read_scrips_file() -> list[list[str]]:
 
 
 @lru_cache(maxsize=None)
-def get_sgbs() -> list[SGB]:
+def get_sgbs_from_nse_site() -> list[SGB]:
     with sync_playwright() as p:
         browser = p.firefox.launch()
         page = browser.new_page()
@@ -101,8 +104,13 @@ def get_sgbs() -> list[SGB]:
     logger.info(
         f'fetched all SGB data from NSE website. Sample data - "{sgbs_trading[0]}"'
     )
+    return sgbs_trading
 
-    current_gold_price = get_price_of_gold()
+
+@lru_cache(maxsize=None)
+def get_sgbs() -> list[SGB]:
+    sgbs_trading: list[SGB] = get_sgbs_from_nse_site()
+    current_gold_price: float = get_price_of_gold()
 
     for sgb in sgbs_trading:
         sgb.xirr = calculate_sgb_xirr(sgb, current_gold_price)

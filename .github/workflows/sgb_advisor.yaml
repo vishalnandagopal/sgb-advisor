@@ -26,6 +26,14 @@ jobs:
           pip install -r requirements.txt
           playwright install firefox
           playwright install-deps
-          cd sgb_advisor
       - name: Run the script
+        env:
+          AWS_ACCESS_KEY: ${{ secrets.AWS_ACCESS_KEY }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          AWS_SES_RECIPIENT: ${{ secrets.AWS_SES_RECIPIENT }}
+          AWS_SES_SENDER_EMAIL: ${{ secrets.AWS_SES_SENDER_EMAIL }}
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+          AWS_REGION: ${{ AWS_REGION }}
+          MODE: ${{ MODE }}
         run: python3 app.py
