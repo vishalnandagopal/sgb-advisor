@@ -1,3 +1,5 @@
+.git
+
 # python generated files
 __pycache__/
 *.py[oc]
@@ -16,7 +18,7 @@ wheels/
 .DS_Store
 *.env
 
-.github/
-.git/
-requirements.txt
+tmp/
 output/
+testing.py
+test.py

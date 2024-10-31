@@ -2,7 +2,8 @@ from os import getenv
 
 from ..logger import logger
 from ..models import SGB
-from .email_sender import send_email
+from .common import write_table_html_to_file as write_table_html_to_file
+from .email_sender import send_email as send_email
 from .teleg import create_and_send_message, validate_telegram_envs
 
 
@@ -32,7 +33,7 @@ def notify(sgbs: list[SGB]) -> bool:
     if "telegram" in MODE_OF_OPERATION:
         if not validate_telegram_envs() or not create_and_send_message(sgbs):
             success = False
-    elif "email" in MODE_OF_OPERATION:
+    if "email" in MODE_OF_OPERATION:
         if not send_email(sgbs):
             success = False
 
@@ -72,11 +73,11 @@ def guess_mode_of_notification() -> tuple[str, ...]:
 
     if not mode:
         msg: str = (
-            f'Could not guess mode of operation. It is currently set as "{mode}"?'
+            f'could not guess mode of operation. It is currently set as "{mode}"?'
         )
         logger.error(msg)
         raise RuntimeError(msg)
 
-    logger.info(f'Mode of operation is set to "{mode}"')
+    logger.info(f'mode of operation is set to "{mode}"')
 
     return mode

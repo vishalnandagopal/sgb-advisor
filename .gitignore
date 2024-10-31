@@ -16,4 +16,7 @@ wheels/
 .DS_Store
 *.env
 
+tmp/
 output/
+testing.py
+test.py

@@ -4,12 +4,12 @@ WORKDIR /sgb-advisor
 
 COPY requirements.txt requirements.txt
 
-RUN ["pip","install","-r","requirements.txt"]
+RUN --mount=type=cache,target=/root/.cache/pip ["pip", "install", "-r", "requirements.txt"]
 
-RUN ["playwright","install","firefox"]
+RUN ["playwright", "install", "firefox"]
 
-RUN ["playwright","install-deps"]
+RUN ["playwright", "install-deps"]
 
 COPY . .
 
-CMD ["python","app.py"]
+CMD ["python", "app.py"]

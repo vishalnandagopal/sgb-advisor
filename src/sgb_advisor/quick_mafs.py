@@ -67,7 +67,7 @@ def calculate_sgb_xirr(sgb: SGB, current_gold_price: float) -> float:
     x: float | None = xirr(payment_dates, amounts)
 
     if not x:
-        logger.error(f"Couldn't calculate XIRR for {sgb.nse_symbol}")
+        logger.error(f"couldn't calculate XIRR for {sgb.nse_symbol}")
         return 0
 
     return round(x * 100, 3)

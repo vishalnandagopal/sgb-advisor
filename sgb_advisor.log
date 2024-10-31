@@ -80,3 +80,45 @@
 2024-10-29 13:38:59.692 | INFO     | src.sgb_advisor.data:get_sgbs:139 - Fetched all SGB data from NSE website. Sample - "SGBJUL27 - Issued at ₹3443.0 - LTP ₹8550.0 - 2.5% interest - 2027-07-16"
 2024-10-29 13:39:17.429 | INFO     | src.sgb_advisor.data:get_price_of_gold:197 - Fetched price of gold from IBJA as 7885.0
 2024-10-29 13:39:20.015 | INFO     | src.sgb_advisor.notify.email_sender:send_email:203 - Email sent to ! Message ID: 01000192d7527c5a-6bf4f361-88ba-44c3-9ba2-05baccec373a-000000
+2024-10-31 22:12:08.751 | INFO     | src.sgb_advisor.data:get_sgbs:35 - Fetching NSE SGB page at https://www.nseindia.com/market-data/sovereign-gold-bond
+2024-10-31 22:12:21.569 | INFO     | src.sgb_advisor.data:get_sgbs:98 - Fetched all SGB data from NSE website. Sample data - "SGBOCT25IV - Issued at ₹2987.0 - LTP ₹8433.0 - 2.5% interest - 2025-10-23"
+2024-10-31 22:12:24.002 | INFO     | src.sgb_advisor.data:get_price_of_gold:122 - Fetching IBJA page at https://www.ibja.co/
+2024-10-31 22:12:43.066 | INFO     | src.sgb_advisor.data:get_sgbs:35 - Fetching NSE SGB page at https://www.nseindia.com/market-data/sovereign-gold-bond
+2024-10-31 22:14:26.237 | WARNING  | src.sgb_advisor.data:get_sgbs:46 - Failed to fetch SGB info from NSE site when trying for the first time. Trying again
+2024-10-31 22:17:46.247 | ERROR    | src.sgb_advisor.data:get_sgbs:54 - Could not fetch SGBs info from NSE site
+2024-10-31 22:41:35.562 | INFO     | src.sgb_advisor.data:get_sgbs:35 - Fetching NSE SGB page at https://www.nseindia.com/market-data/sovereign-gold-bond
+2024-10-31 22:43:21.209 | WARNING  | src.sgb_advisor.data:get_sgbs:46 - Failed to fetch SGB info from NSE site when trying for the first time. Trying again
+2024-10-31 22:46:16.866 | INFO     | src.sgb_advisor.data:get_sgbs:35 - Fetching NSE SGB page at https://www.nseindia.com/market-data/sovereign-gold-bond
+2024-10-31 22:47:28.802 | INFO     | src.sgb_advisor.data:get_sgbs:35 - Fetching NSE SGB page at https://www.nseindia.com/market-data/sovereign-gold-bond
+2024-10-31 22:49:14.198 | WARNING  | src.sgb_advisor.data:get_sgbs:46 - Failed to fetch SGB info from NSE site when trying for the first time. Trying again
+2024-10-31 22:51:50.454 | INFO     | src.sgb_advisor.data:get_sgbs:35 - Fetching NSE SGB page at https://www.nseindia.com/market-data/sovereign-gold-bond
+2024-10-31 22:53:35.684 | WARNING  | src.sgb_advisor.data:get_sgbs:46 - Failed to fetch SGB info from NSE site when trying for the first time. Trying again
+2024-10-31 22:58:17.153 | INFO     | src.sgb_advisor.data:get_sgbs:35 - Fetching NSE SGB page at https://www.nseindia.com/market-data/sovereign-gold-bond
+2024-10-31 22:58:32.842 | INFO     | src.sgb_advisor.data:get_sgbs:35 - Fetching NSE SGB page at https://www.nseindia.com/market-data/sovereign-gold-bond
+2024-10-31 23:13:59.630 | INFO     | src.sgb_advisor.data:get_sgbs:35 - Fetching NSE SGB page at https://www.nseindia.com/market-data/sovereign-gold-bond
+2024-10-31 23:14:23.020 | INFO     | src.sgb_advisor.data:get_sgbs:35 - Fetching NSE SGB page at https://www.nseindia.com/market-data/sovereign-gold-bond
+2024-10-31 23:19:30.369 | INFO     | src.sgb_advisor.data:get_sgbs:35 - Fetching NSE SGB page at https://www.nseindia.com/market-data/sovereign-gold-bond
+2024-10-31 23:21:13.012 | WARNING  | src.sgb_advisor.data:get_sgbs:46 - Failed to fetch SGB info from NSE site when trying for the first time. Trying again
+2024-10-31 23:21:51.562 | INFO     | src.sgb_advisor.data:get_sgbs:35 - Fetching NSE SGB page at https://www.nseindia.com/market-data/sovereign-gold-bond
+2024-10-31 23:24:30.711 | WARNING  | src.sgb_advisor.data:get_sgbs:46 - Failed to fetch SGB info from NSE site when trying for the first time. Trying again
+2024-10-31 23:25:27.335 | INFO     | src.sgb_advisor.data:get_sgbs:35 - Fetching NSE SGB page at https://www.nseindia.com/market-data/sovereign-gold-bond
+2024-10-31 23:26:23.044 | INFO     | src.sgb_advisor.data:get_sgbs:35 - Fetching NSE SGB page at https://www.nseindia.com/market-data/sovereign-gold-bond
+2024-10-31 23:28:07.050 | WARNING  | src.sgb_advisor.data:get_sgbs:46 - Failed to fetch SGB info from NSE site when trying for the first time. Trying again
+2024-10-31 23:29:04.208 | INFO     | src.sgb_advisor.data:get_sgbs:38 - Fetching NSE SGB page at https://www.nseindia.com/market-data/sovereign-gold-bond
+2024-10-31 23:29:11.787 | INFO     | src.sgb_advisor.data:get_sgbs:101 - Fetched all SGB data from NSE website. Sample data - "SGBOCT25IV - Issued at ₹2987.0 - LTP ₹8433.0 - 2.5% interest - 2025-10-23"
+2024-10-31 23:29:14.562 | INFO     | src.sgb_advisor.data:get_price_of_gold:122 - Fetching IBJA page at https://www.ibja.co/
+2024-10-31 23:29:30.293 | INFO     | src.sgb_advisor.data:get_price_of_gold:143 - Fetched price of gold from IBJA as 7956.0
+2024-10-31 23:29:30.298 | INFO     | src.sgb_advisor.notify:guess_mode_of_notification:83 - Mode of operation is set to "('telegram',)"
+2024-10-31 23:30:45.923 | INFO     | src.sgb_advisor.data:get_sgbs:38 - Fetching NSE SGB page at https://www.nseindia.com/market-data/sovereign-gold-bond
+2024-10-31 23:32:33.422 | INFO     | src.sgb_advisor.data:get_sgbs:38 - Fetching NSE SGB page at https://www.nseindia.com/market-data/sovereign-gold-bond
+2024-10-31 23:32:45.282 | INFO     | src.sgb_advisor.data:get_sgbs:101 - Fetched all SGB data from NSE website. Sample data - "SGBOCT25IV - Issued at ₹2987.0 - LTP ₹8433.0 - 2.5% interest - 2025-10-23"
+2024-10-31 23:32:48.659 | INFO     | src.sgb_advisor.data:get_price_of_gold:122 - Fetching IBJA page at https://www.ibja.co/
+2024-10-31 23:33:01.651 | INFO     | src.sgb_advisor.data:get_price_of_gold:143 - Fetched price of gold from IBJA as 7956.0
+2024-10-31 23:33:01.653 | INFO     | src.sgb_advisor.notify:guess_mode_of_notification:83 - Mode of operation is set to "('telegram',)"
+2024-10-31 23:37:34.183 | INFO     | src.sgb_advisor.data:get_sgbs:38 - Fetching NSE SGB page at https://www.nseindia.com/market-data/sovereign-gold-bond
+2024-10-31 23:37:58.258 | INFO     | src.sgb_advisor.data:get_sgbs:38 - Fetching NSE SGB page at https://www.nseindia.com/market-data/sovereign-gold-bond
+2024-10-31 23:38:05.094 | INFO     | src.sgb_advisor.data:get_sgbs:38 - Fetching NSE SGB page at https://www.nseindia.com/market-data/sovereign-gold-bond
+2024-10-31 23:39:46.792 | WARNING  | src.sgb_advisor.data:get_sgbs:49 - Failed to fetch SGB info from NSE site when trying for the first time. Trying again
+2024-10-31 23:41:47.828 | INFO     | src.sgb_advisor.data:get_sgbs:38 - Fetching NSE SGB page at https://www.nseindia.com/market-data/sovereign-gold-bond
+2024-10-31 23:45:37.305 | INFO     | src.sgb_advisor.data:get_sgbs:38 - Fetching NSE SGB page at https://www.nseindia.com/market-data/sovereign-gold-bond
+2024-10-31 23:47:22.389 | WARNING  | src.sgb_advisor.data:get_sgbs:49 - Failed to fetch SGB info from NSE site when trying for the first time. Trying again
