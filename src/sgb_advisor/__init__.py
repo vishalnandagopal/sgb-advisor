@@ -1,3 +1,7 @@
+"""
+A tool to analyse Sovereign Gold Bonds and compare their yields.
+"""
+
 from .data import get_price_of_gold as get_price_of_gold
 from .data import get_sgbs as get_sgbs
 from .logger import logger as logger

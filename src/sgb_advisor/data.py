@@ -2,6 +2,7 @@ from csv import reader as csv_reader
 from datetime import datetime
 from functools import lru_cache
 from os.path import dirname
+from typing import Optional
 
 from playwright.sync_api import TimeoutError as PlaywrightTimeoutError
 from playwright.sync_api import sync_playwright
@@ -17,7 +18,13 @@ NSE_SGB_URL = "https://www.nseindia.com/market-data/sovereign-gold-bond"
 IBJA_URL = "https://www.ibja.co/"
 
 
-NSESiteNotLoadedError = RuntimeError("NSE Site doesn't seem to have loaded this time")
+class SiteNotLoadedError(PlaywrightTimeoutError):
+    """
+    Separate error class to use when site doesn't load, to avoid catching other types of errors. The NSE site fails to load a lot of times
+    """
+
+
+SiteNotLoadedError("NSE Site doesn't seem to have loaded this time")
 
 
 def read_scrips_file() -> list[list[str]]:
@@ -32,13 +39,30 @@ def read_scrips_file() -> list[list[str]]:
         return list(csv_contents)
 
 
-@lru_cache(maxsize=None)
-def get_sgbs_from_nse_site() -> list[SGB]:
+def get_sgbs_from_nse_site(n_th: Optional[int] = 1) -> list[SGB]:
+    """
+    Fetch info for SGBs located at NSE_SGB_URL. Uses the [playwright](https://playwright.dev/python/) library.
+
+    Parameters
+    ----------
+    n_th : Optional[int]
+        The nth try going on. Used to print along with the logs. Defaults to 1
+
+    Returns
+    -------
+    list[SGB]
+        list of SGBs
+
+    Examples
+    --------
+    >>> get_sgbs_from_nse_site(1)
+        [SGB1, SGB2]
+    """
     with sync_playwright() as p:
         browser = p.firefox.launch()
         page = browser.new_page()
 
-        logger.info(f"fetching NSE SGB page at {NSE_SGB_URL}")
+        logger.info(f"fetching NSE SGB page at {NSE_SGB_URL} - {n_th} times(s)")
         page.goto(NSE_SGB_URL, timeout=100000)
 
         SGBLTP_QUERY_SEL = "#sgbTable > tbody > tr > td:nth-child(7)"
@@ -46,19 +70,11 @@ def get_sgbs_from_nse_site() -> list[SGB]:
 
         # NSE website loads info after page load. So wait for this to appear
         try:
-            page.wait_for_selector(SGBLTP_QUERY_SEL, timeout=100000)
+            page.wait_for_selector(SGBLTP_QUERY_SEL, timeout=50000)
         except PlaywrightTimeoutError:
-            # Sometimes it fails but succeeds on 2nd try.
-            logger.warning(
-                "failed to fetch SGB info from NSE site when trying for the first time. Trying again"
-            )
-            try:
-                page.wait_for_selector(SGBLTP_QUERY_SEL, timeout=200000)
-            except PlaywrightTimeoutError as e:
-                # If it fails again we are letting it
-                msg: str = "could not fetch SGBs info from NSE site"
-                logger.error(msg)
-                raise RuntimeError(msg + str(e))
+            msg: str = "could not fetch SGBs info from NSE site"
+            logger.error(msg)
+            raise SiteNotLoadedError(msg)
 
         sgb_ltp_results = page.query_selector_all(selector=SGBLTP_QUERY_SEL)
         sgb_name_results = page.query_selector_all(selector=SGBNAME_QUERY_SEL)
@@ -109,7 +125,33 @@ def get_sgbs_from_nse_site() -> list[SGB]:
 
 @lru_cache(maxsize=None)
 def get_sgbs() -> list[SGB]:
-    sgbs_trading: list[SGB] = get_sgbs_from_nse_site()
+    """
+    Fetches the list of SGBs from the NSE site. Parent function to try until it succeeds, since it is very flaky. Tries a maximum of 10 times.
+
+    Parameters
+    ----------
+    None
+
+    Returns
+    -------
+    list[SGB]
+        List of SGBs
+
+    Examples
+    --------
+    >>> get_sgbs()
+    [SGB1, SGB2, SGB3]
+    """
+    sgbs_trading: list[SGB] = list()
+    for i in range(1, 11):
+        # try till it succeeds?
+        if sgbs_trading:
+            break
+        try:
+            sgbs_trading = get_sgbs_from_nse_site(i)
+        except SiteNotLoadedError:
+            pass
+
     current_gold_price: float = get_price_of_gold()
 
     for sgb in sgbs_trading:
@@ -121,13 +163,30 @@ def get_sgbs() -> list[SGB]:
     return sgbs_trading
 
 
-@lru_cache(maxsize=None)
-def get_price_of_gold() -> float:
+def fetch_price_of_gold_from_ibja(n_th: Optional[int] = 1) -> float:
+    """
+    Fetches the price of gold using the playwright library, from the site at IBJA_URL
+
+    Parameters
+    ----------
+    n_th : Optional[int]
+        The nth try going on. Used to print along with the logs. Defaults to 1
+
+    Returns
+    -------
+    float
+        The price of gold
+
+    Examples
+    --------
+    >>> fetch_price_of_gold_from_ibja()
+    7956
+    """
     with sync_playwright() as p:
         browser = p.firefox.launch()
         page = browser.new_page()
 
-        logger.info(f"fetching IBJA page at {IBJA_URL}")
+        logger.info(f"fetching IBJA page at {IBJA_URL} - {n_th} time")
         page.goto(IBJA_URL, timeout=100000)
 
         FINE_GOLD_PRICE_QUERY_SEL = "#lblFineGold999"
@@ -148,5 +207,39 @@ def get_price_of_gold() -> float:
     gold_price = (
         float(_gold_price_str.replace("₹", "").strip()) if _gold_price_str else -1
     )
+    return gold_price
+
+
+@lru_cache(maxsize=None)
+def get_price_of_gold() -> float:
+    """
+    Fetches the price of gold from the IBJA site. Parent function to try until it succeeds, since it is very flaky. Tries a maximum of 10 times.
+
+    Parameters
+    ----------
+    None
+
+    Returns
+    -------
+    float
+        The price of gold
+
+    Examples
+    --------
+    >>> get_price_of_gold()
+    7956.00
+    """
+
+    gold_price: float = 0
+
+    for i in range(1, 11):
+        # try till it succeeds?
+        if gold_price:
+            break
+        try:
+            gold_price = fetch_price_of_gold_from_ibja(i)
+        except SiteNotLoadedError:
+            pass
+
     logger.info(f"fetched price of gold from IBJA as {gold_price}")
     return gold_price

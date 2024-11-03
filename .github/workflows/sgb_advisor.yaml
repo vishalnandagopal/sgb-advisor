@@ -2,7 +2,7 @@
 name: SGB Advisor
 on:
   schedule:
-    - cron: "0 6 * * 1"
+    - cron: "30 5 * * 1-5"
   push:
     branches:
       - master
@@ -19,7 +19,7 @@ jobs:
       - name: Setup python and pip
         uses: actions/setup-python@v5
         with:
-          python-version: "3.12"
+          python-version: "3.13"
           cache: "pip" # caching pip dependencies
       - name: Install requirements and setup playwright
         run: |
@@ -33,7 +33,7 @@ jobs:
           AWS_SES_RECIPIENT: ${{ secrets.AWS_SES_RECIPIENT }}
           AWS_SES_SENDER_EMAIL: ${{ secrets.AWS_SES_SENDER_EMAIL }}
           TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
-          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+          TELEGRAM_CHAT_IDS: ${{ secrets.TELEGRAM_CHAT_IDS }}
           AWS_REGION: ${{ vars.AWS_REGION }}
           MODE: ${{ vars.MODE }}
         run: python3 app.py

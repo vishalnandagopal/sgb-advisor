@@ -1,18 +1,48 @@
-from os import makedirs
+"""
+Commons functions that can be used by all methods of notifications
+"""
+
+from datetime import datetime
 from os.path import dirname
+from pathlib import Path
 from random import randint
 from tempfile import gettempdir
-from time import time
+from typing import Optional
 
 from ..data import SGB
 from ..logger import logger
 
 
-def get_temp_file_path(file_extension: str = ".html") -> str:
-    tmp_folder = f"{gettempdir()}/sgb_advisor"
-    makedirs(tmp_folder, exist_ok=True)
+def get_temp_file_path(file_extension: Optional[str] = "html") -> Path:
+    """
+    Get a file path located at a folder in the the temp folder of the OS. Creates required parents folders if it doesn't exist.
 
-    return rf"{tmp_folder}/{time()}-{randint(0, 10000)}.{file_extension}"
+    Paramters
+    ---------
+    file_extension : str
+        The extension of the file, without the '.' prefix. Attached to the end of the file path. Defaults to "html".
+
+    Returns
+    -------
+    Path
+        The complete absolute file path
+
+    Examples
+    --------
+    >>> get_temp_file_path()
+    Path("E:/Code/sgb_advisor/tmp/sgb_advisor/1730403483.2583637-9432.html")
+    """
+    tmp_folder = Path(f"{gettempdir()}/sgb_advisor")
+    tmp_folder.mkdir(parents=True, exist_ok=True)
+
+    file_name = f"{datetime.now().date()} SGB Advisor Output {randint(10000, 99999)}.{file_extension}"
+
+    p = Path(rf"{tmp_folder}/{file_name}")
+
+    # if not p.is_file():
+    #     raise RuntimeError("temp file doesn't seem to have been created properly")
+
+    return p
 
 
 def get_table_row_html(sgb: SGB) -> str:
@@ -100,23 +130,24 @@ def get_table_html(sgbs: list[SGB]) -> str:
     return table_html
 
 
-def write_html_to_file(html: str) -> str:
+def write_html_to_file(html: str) -> Path:
     """
-    Writes the HTML to the output file for debugging purposes
+    Writes the HTML to the a temporary output file and returns the path of the temp file.
 
     Parameters
     ----------
-    list[sgb] : List of SGBs
-    output_file : The output file to write the HTML to. Defaults to `/../assets/output/email.html`
+    html: str
+        The HTML to write
 
     Returns
     -------
-    bool : True if successful
+    Path
+        The output file the HTML was written to
 
     Examples
     --------
-    >>> send_email(sgbs)
-    True
+    >>> write_html_to_file("<html></html>")
+    Path("E:/Code/sgb_advisor/tmp/sgb_advisor/1730403483.2583637-9432.html")
     """
 
     output_file = get_temp_file_path("html")
@@ -131,7 +162,25 @@ def write_html_to_file(html: str) -> str:
     raise RuntimeError(msg)
 
 
-def write_table_html_to_file(sgbs: list[SGB]) -> str:
+def write_table_html_to_file(sgbs: list[SGB]) -> Path:
+    """
+    Write an HTML table to a file. Generates a string with all the SGBs and their returns. Calls the `write_html_to_file()` function to write the HTML
+
+    Parameters
+    ----------
+    sgbs : list[SGB]
+        The list of SGBs
+
+    Returns
+    -------
+    Path
+        The path of the output HTML file given by `write_html_to_file()`
+
+    Examples
+    --------
+    >>> write_table_html_to_file([SGB1, SGB2, SGB3])
+    Path("E:/Code/sgb_advisor/tmp/sgb_advisor/1730403483.2583637-9432.html")
+    """
     table_html = get_table_html(sgbs)
 
     html = f"""<html>

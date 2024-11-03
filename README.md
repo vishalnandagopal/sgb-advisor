@@ -1,5 +1,7 @@
 # sgb-advisor
 
+A tool to analyse Sovereign Gold Bonds and compare their yields.
+
 [Sovereign Gold Bond](https://www.rbi.org.in/commonman/English/Scripts/FAQs.aspx?Id=1658) is a security issued by [RBI](https://rbi.org.in) linked to the price of gold.
 
 This tries to use publically available data and maths to advise you on which SGB among all of them is trading at it's lowest "fair value".
@@ -48,7 +50,7 @@ Set how to send results to the user in an .
 
     1. Get an API key from [BotFather](https://t.me/BotFather) on Telegram ("bot token").
 
-    2. Get the chat ID of the user. It is the unique identifier for the target chat (integer in this case) or username of the target channel (@channelusername in this case).
+    2. Get the chat ID of the user(s) you want to send the output to. It is the unique identifier for the target chat (integer in this case) or username of the target channel (@channelusername in this case). Output can be sent to multiple users (place comma-separated chat IDs). Errors are only sent to the first chat-id.
 
     If you don't know your chat ID, get it by sending a message to [@JsonDumpBot](https://t.me/JsonDumpBot). The ["chat"]["id"] in response is the ID you need to use to send to that same account you texted the bot from.
 
@@ -65,7 +67,7 @@ MODE=telegram
 # How to notify the user. Accepted values are "telegram", "email" or "both"
 
 TELEGRAM_BOT_TOKEN=xxxxxxxxxx:xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-TELEGRAM_CHAT_ID=xxxxxxxxx
+TELEGRAM_CHAT_IDS=xxxxxxxxx,xxxxxxx
 
 # No one need to set any of these if you only want to send a message through telegram
 AWS_ACCESS_KEY=xxx
