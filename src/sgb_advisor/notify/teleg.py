@@ -336,10 +336,10 @@ def get_top_n_sgbs_text(sgbs: list[SGB], n: int = 3) -> str:
 
     for sgb in sgbs[:n]:
         # Replacing . in XIRR  with \. since . is reserved for some reason in the markdown mode in Telegram API
-        text += f"\n\n`{sgb.nse_symbol}` \\- ₹{str(sgb.issue_price).replace(".","\\.")} \\- {str(sgb.xirr).replace(".","\\.")}%"
+        text += f"\n\n`{sgb.nse_symbol}` \\- ₹{str(sgb.ltp).replace(".","\\.")} \\- {str(sgb.xirr).replace(".","\\.")}%"
 
-    text += (
-        "\n[Disclaimers](https://github.com/vishalnandagopal/sgb-advisor/blob/master/README.md#disclaimers)"
-    )
+    disclaimer_text = "\n[Disclaimers](https://github.com/vishalnandagopal/sgb-advisor/blob/master/README.md#disclaimers)"
+
+    text += disclaimer_text
 
     return text
