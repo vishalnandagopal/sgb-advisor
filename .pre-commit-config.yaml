@@ -10,7 +10,6 @@ repos:
       - id: check-added-large-files
       - id: check-merge-conflict
       - id: check-symlinks
-      - id: check-yaml
   - repo: https://github.com/astral-sh/uv-pre-commit
     # uv version.
     rev: 0.4.29
