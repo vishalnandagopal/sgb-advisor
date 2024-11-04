@@ -339,7 +339,7 @@ def get_top_n_sgbs_text(sgbs: list[SGB], n: int = 3) -> str:
         text += f"\n\n`{sgb.nse_symbol}` \\- ₹{str(sgb.issue_price).replace(".","\\.")} \\- {str(sgb.xirr).replace(".","\\.")}%"
 
     text += (
-        "\n[Disclaimers](https://github.com/vishalnandagopal/sgb-advisor#disclaimer)"
+        "\n[Disclaimers](https://github.com/vishalnandagopal/sgb-advisor/blob/master/README.md#disclaimers)"
     )
 
     return text
