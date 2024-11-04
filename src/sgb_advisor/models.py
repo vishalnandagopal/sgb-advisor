@@ -2,7 +2,7 @@ from datetime import date
 
 
 class SGB:
-    """A class that holds all necessary info to do anything with an SGB"""
+    """A class that holds all necessary info to do or calculate anything with an SGB"""
 
     def __init__(
         self,

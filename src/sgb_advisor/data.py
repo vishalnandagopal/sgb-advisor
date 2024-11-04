@@ -23,17 +23,37 @@ class SiteNotLoadedError(PlaywrightTimeoutError):
     Separate error class to use when site doesn't load, to avoid catching other types of errors. The NSE site fails to load a lot of times
     """
 
-
-SiteNotLoadedError("NSE Site doesn't seem to have loaded this time")
+    def __init__(self, message):
+        super().__init__(message)
 
 
 def read_scrips_file() -> list[list[str]]:
-    """Returns scrips.csv which is of the format
-
-    Symbol NSE,Symbol BSE,Interest per annum,Interest payment dates,Maturity Date,Issue price
     """
-    # File is taken from TradingQnA - https://tradingqna.com/t/interest-payment-dates-for-sovereign-gold-bonds-sgbs/145120
+    Returns scrips.csv which is of the format
 
+    Paramters
+    ---------
+    None
+
+    Returns
+    -------
+    list[list[str]]
+        Returns a list of rows in the CSV, with the format "Symbol NSE,Symbol BSE,Interest per annum,Interest payment dates,Maturity Date,Issue price"
+
+    Examples
+    --------
+    >>> read_scrips_file()
+    [
+        [
+            "Symbol NSE,Symbol BSE,Interest per annum,Interest payment dates,Maturity Date,Issue price"
+        ],
+        [
+            "SGBMAR24", "SGB2016II", "2.75%", "29th March and September", "29/03/2024", "2916"
+        ],
+    ]
+
+    File is taken from [TradingQnA](https://tradingqna.com/t/interest-payment-dates-for-sovereign-gold-bonds-sgbs/145120)
+    """
     with open(dirname(__file__) + "/assets/scrips.csv") as f:
         csv_contents = csv_reader(f, delimiter=",")
         return list(csv_contents)
@@ -56,7 +76,7 @@ def get_sgbs_from_nse_site(n_th: Optional[int] = 1) -> list[SGB]:
     Examples
     --------
     >>> get_sgbs_from_nse_site(1)
-        [SGB1, SGB2]
+    [SGB1, SGB2]
     """
     with sync_playwright() as p:
         browser = p.firefox.launch()
@@ -126,7 +146,7 @@ def get_sgbs_from_nse_site(n_th: Optional[int] = 1) -> list[SGB]:
 @lru_cache(maxsize=None)
 def get_sgbs() -> list[SGB]:
     """
-    Fetches the list of SGBs from the NSE site. Parent function to try until it succeeds, since it is very flaky. Tries a maximum of 10 times.
+    Fetches the list of SGBs from the NSE site. Parent function to try until it succeeds, since the site is very unreliable. Tries a maximum of 10 times.
 
     Parameters
     ----------
@@ -180,7 +200,7 @@ def fetch_price_of_gold_from_ibja(n_th: Optional[int] = 1) -> float:
     Examples
     --------
     >>> fetch_price_of_gold_from_ibja()
-    7956
+    7956.00
     """
     with sync_playwright() as p:
         browser = p.firefox.launch()
@@ -213,7 +233,7 @@ def fetch_price_of_gold_from_ibja(n_th: Optional[int] = 1) -> float:
 @lru_cache(maxsize=None)
 def get_price_of_gold() -> float:
     """
-    Fetches the price of gold from the IBJA site. Parent function to try until it succeeds, since it is very flaky. Tries a maximum of 10 times.
+    Fetches the price of gold from the IBJA site. Parent function to try until it succeeds. Tries a maximum of 10 times.
 
     Parameters
     ----------

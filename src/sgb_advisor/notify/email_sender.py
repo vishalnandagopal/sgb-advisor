@@ -47,7 +47,7 @@ def get_email_body_plain_text(sgbs: list[SGB]):
     Returns
     -------
     str
-        The text that shows info on many SGBs
+        Plain text that shows info on many SGBs
 
     Examples
     --------

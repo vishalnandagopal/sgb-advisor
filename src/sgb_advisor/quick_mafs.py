@@ -16,7 +16,7 @@ def calculate_sgb_xirr(sgb: SGB, current_gold_price: float) -> float:
     sgb : SGB
         The SGB object
     current_gold_price: float
-        The actual gold price, preferably from IBJA
+        The price of gold
 
     Returns
     -------
@@ -27,7 +27,6 @@ def calculate_sgb_xirr(sgb: SGB, current_gold_price: float) -> float:
     --------
     >>> calculate_sgb_xirr(SGB_object, 7490)
     13.90
-
     """
     maturity = sgb.maturity_date
     today: date = datetime.now().date()
