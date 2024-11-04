@@ -3,8 +3,8 @@ Send messages and files using the Telegram API
 """
 
 from json import loads as json_loads
-from pathlib import Path
 from os import getenv
+from pathlib import Path
 
 from playwright.sync_api import sync_playwright
 from requests import get as r_get
@@ -244,7 +244,7 @@ def send_message_with_photo(
 
         files = {
             "document": (
-                photo_path.stem,
+                photo_path.stem + photo_path.suffix,
                 open(photo_path, "rb"),
                 "image/.png",
                 {"Expires": "0"},
@@ -309,7 +309,7 @@ def generate_screenshot_of_html(sgbs: list[SGB]) -> Path:
 
 def get_top_n_sgbs_text(sgbs: list[SGB], n: int = 3) -> str:
     """
-    Get text with just top n SGBs. Can be used to caption a photo.
+    Get text with just top n SGBs.
 
     Parameters
     ----------
@@ -337,5 +337,9 @@ def get_top_n_sgbs_text(sgbs: list[SGB], n: int = 3) -> str:
     for sgb in sgbs[:n]:
         # Replacing . in XIRR  with \. since . is reserved for some reason in the markdown mode in Telegram API
         text += f"\n\n`{sgb.nse_symbol}` \\- ₹{str(sgb.issue_price).replace(".","\\.")} \\- {str(sgb.xirr).replace(".","\\.")}%"
+
+    text += (
+        "\n[Disclaimers](https://github.com/vishalnandagopal/sgb-advisor#disclaimer)"
+    )
 
     return text

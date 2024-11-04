@@ -3,11 +3,8 @@ name: sgb-advisor
 services:
     app:
         build: ./
-        image: sgb_advisor:latest
-        environment:
-            MODE: both
         secrets:
-            - API_KEYS
+            - env
 secrets:
-    API_KEYS:
+    env:
         file: .env

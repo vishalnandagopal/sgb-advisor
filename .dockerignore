@@ -22,3 +22,4 @@ tmp/
 output/
 testing.py
 test.py
+*.log

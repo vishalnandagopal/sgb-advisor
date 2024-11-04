@@ -62,7 +62,7 @@ def get_sgbs_from_nse_site(n_th: Optional[int] = 1) -> list[SGB]:
         browser = p.firefox.launch()
         page = browser.new_page()
 
-        logger.info(f"fetching NSE SGB page at {NSE_SGB_URL} - {n_th} times(s)")
+        logger.info(f"fetching NSE SGB page at {NSE_SGB_URL} - {n_th} time(s)")
         page.goto(NSE_SGB_URL, timeout=100000)
 
         SGBLTP_QUERY_SEL = "#sgbTable > tbody > tr > td:nth-child(7)"

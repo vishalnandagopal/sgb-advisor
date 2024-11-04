@@ -68,7 +68,7 @@ def guess_mode_of_notification() -> set[str]:
             mode.add("email")
 
     if not mode:
-        msg: str = f'could not guess mode of operation . It is currently set as "{mode}". Output will oonly be written to file and not sent anywhere.'
+        msg: str = f'could not guess mode of operation . It is currently set as "{mode}". Output will only be written to file and not sent anywhere.'
 
         logger.error(msg)
         raise RuntimeError(msg)
