@@ -18,26 +18,31 @@ Look at how it informs you in [this](https://t.me/sgb_advisor) public Telegram c
 
 ## Running the app
 
-Run any of these 2 in the root of the project after cloning it
+You can use any of the 3 methods given below
 
-1. I used [`uv`](https://github.com/astral-sh/uv) to build the project, you can use that or plain pip
+1. You can use plain pip or something like [`uv`](https://github.com/astral-sh/uv) to build and run the project.
 
     ```sh
-    pip install uv
-    uv sync
+    # Highly recommend creating a venv using `python -m venv .venv` and then activating it (https://docs.python.org/3/library/venv.html#how-venvs-work) first.
+    pip install -r requirements.txt
+    # Setup env before this
     python app.py
     ```
 
     (or)
 
     ```sh
-    pip install -r requirements.txt
+    pip install uv
+    # Creates venv automatically
+    uv sync
+    # Setup env before this
     python app.py
     ```
 
-2. [Docker](https://www.docker.com/products/docker-desktop/) (recommended)
+2. Docker
 
     ```sh
+    # Setup env before this
     docker-compose up
     ```
 

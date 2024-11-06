@@ -25,7 +25,7 @@ def get_temp_file_path(file_extension: Optional[str] = "html") -> Path:
     Returns
     -------
     Path
-        The complete absolute file path
+        The path object pointing to the temporary file
 
     Examples
     --------

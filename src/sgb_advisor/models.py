@@ -4,6 +4,15 @@ from datetime import date
 class SGB:
     """A class that holds all necessary info to do or calculate anything with an SGB"""
 
+    __slots__ = {
+        "nse_symbol",
+        "ltp",
+        "issue_price",
+        "interest_rate",
+        "maturity_date",
+        "xirr",
+    }
+
     def __init__(
         self,
         nse_symbol: str,
