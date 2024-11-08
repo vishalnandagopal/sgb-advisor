@@ -42,8 +42,9 @@ You can use any of the 3 methods given below
 2. Docker
 
     ```sh
+    sudo docker build . -t vishalnandagopal/sgb-advisor:latest -f Dockerfile
     # Setup env before this
-    docker-compose up
+    sudo docker run --env-file .env vishalnandagopal/sgb-advisor:latest
     ```
 
 3. Github actions
