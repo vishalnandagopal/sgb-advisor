@@ -80,7 +80,7 @@ def get_sgbs_from_nse_site(n_th: Optional[int] = 1) -> list[SGB]:
     """
     with sync_playwright() as p:
         # Was firefox before, but NSE website is very buggy with it
-        browser = p.chromium.launch(headless=(False if log_level == "DEBUG" else True))
+        browser = p.firefox.launch(headless=(False if log_level == "DEBUG" else True))
         page = browser.new_page()
         current_user_agent: str = page.evaluate("navigator.userAgent")
         new_user_agent = current_user_agent.replace("Headless", "")
@@ -220,7 +220,7 @@ def fetch_price_of_gold_from_ibja(n_th: Optional[int] = 1) -> float:
     7956.00
     """
     with sync_playwright() as p:
-        browser = p.chromium.launch(headless=(False if log_level == "DEBUG" else True))
+        browser = p.firefox.launch(headless=(False if log_level == "DEBUG" else True))
         page = browser.new_page()
 
         logger.info(f"fetching IBJA page at {IBJA_URL} - {n_th} time")

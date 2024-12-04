@@ -32,7 +32,7 @@ jobs:
           key: ${{ runner.os }}-playwright
       - name: Setup and install playwright
         run: |
-          playwright install --with-deps chromium
+          playwright install --with-deps firefox
       - name: Run the script
         env:
           AWS_ACCESS_KEY: ${{ secrets.AWS_ACCESS_KEY }}
