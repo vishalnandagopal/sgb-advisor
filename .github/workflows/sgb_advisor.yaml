@@ -24,13 +24,13 @@ jobs:
       - name: Install requirements
         run: |
           pip install -r requirements.txt
-      - name: Setup playwright
+      - name: Get playwright cache
         uses: actions/setup-cache@v4
         id: playwright-cache
         with:
-          path: |
-            ~/.cache/ms-playwright
+          path: ~/.cache/ms-playwright
           key: ${{ runner.os }}-playwright
+      - name: Setup and install playwright
         run: |
           playwright install --with-deps chromium
       - name: Run the script
