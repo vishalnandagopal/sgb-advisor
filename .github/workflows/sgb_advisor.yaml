@@ -24,22 +24,24 @@ jobs:
       - name: Install requirements
         run: |
           pip install -r requirements.txt
-      - name: Setup playwright
+      - name: Get playwright cache
+        uses: actions/cache@v4
         id: playwright-cache
         with:
-          path: |
-            ~/.cache/ms-playwright
+          path: ~/.cache/ms-playwright
           key: ${{ runner.os }}-playwright
+      - name: Setup and install playwright
         run: |
-          playwright install --with-deps chromium
+          playwright install --with-deps firefox
       - name: Run the script
         env:
-          AWS_ACCESS_KEY: ${{ secrets.AWS_ACCESS_KEY }}
-          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          AWS_SES_RECIPIENT: ${{ secrets.AWS_SES_RECIPIENT }}
-          AWS_SES_SENDER_EMAIL: ${{ secrets.AWS_SES_SENDER_EMAIL }}
-          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
-          TELEGRAM_CHAT_IDS: ${{ secrets.TELEGRAM_CHAT_IDS }}
-          AWS_REGION: ${{ vars.AWS_REGION }}
-          MODE: ${{ vars.MODE }}
+          SGB_AWS_ACCESS_KEY: ${{ secrets.SGB_AWS_ACCESS_KEY }}
+          SGB_AWS_SECRET_ACCESS_KEY: ${{ secrets.SGB_AWS_SECRET_ACCESS_KEY }}
+          SGB_AWS_SES_RECIPIENT: ${{ secrets.SGB_AWS_SES_RECIPIENT }}
+          SGB_AWS_SES_SENDER_EMAIL: ${{ secrets.SGB_AWS_SES_SENDER_EMAIL }}
+          SGB_TELEGRAM_BOT_TOKEN: ${{ secrets.SGB_TELEGRAM_BOT_TOKEN }}
+          SGB_TELEGRAM_CHAT_IDS: ${{ secrets.SGB_TELEGRAM_CHAT_IDS }}
+          SGB_AWS_REGION: ${{ vars.SGB_AWS_REGION }}
+          SGB_MODE: ${{ vars.SGB_MODE }}
+          SGB_LOG_LEVEL : ${{ vars.SGB_LOG_LEVEL }}
         run: python3 app.py

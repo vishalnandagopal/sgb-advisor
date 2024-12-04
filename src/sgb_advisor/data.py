@@ -8,7 +8,7 @@ from playwright.sync_api import TimeoutError as PlaywrightTimeoutError
 from playwright.sync_api import sync_playwright
 from typing_extensions import TypeIs
 
-from .logger import logger, log_level
+from .logger import log_level, logger
 from .models import SGB
 from .quick_mafs import calculate_sgb_xirr
 
@@ -80,15 +80,17 @@ def get_sgbs_from_nse_site(n_th: Optional[int] = 1) -> list[SGB]:
     """
     with sync_playwright() as p:
         # Was firefox before, but NSE website is very buggy with it
-        browser = p.chromium.launch(headless=(False if log_level == "DEBUG" else True))
+        browser = p.firefox.launch(headless=(False if log_level == "DEBUG" else True))
         page = browser.new_page()
-        # current_user_agent: str = page.evaluate("navigator.userAgent")
-        # page.close()
-        # new_user_agent = current_user_agent.replace("Headless", "")
-        # logger.debug(f"Setting new user agent to {new_user_agent}")
-        # page = browser.new_page(user_agent=new_user_agent)
+        current_user_agent: str = page.evaluate("navigator.userAgent")
+        new_user_agent = current_user_agent.replace("Headless", "")
+        if new_user_agent != current_user_agent:
+            page.close()
+            logger.info(f"Setting new user agent to {new_user_agent}")
+            page = browser.new_page(user_agent=new_user_agent)
         logger.info(f"fetching NSE SGB page at {NSE_SGB_URL} - {n_th} time(s)")
-        # For some weird ass reason, NSE website fails to load half the times if playwright opens it immediately after the browser has opened. Loading a URL first and after that switching to NSE site.
+
+        # For some weird ass reason, NSE website fails to load half the times if playwright opens it immediately after the browser has opened. Loading a URL first and after that switching to NSE site since it improves loading?
         # This could also be a firefox issue
         page.goto("https://www.vishalnandagopal.com")
         page.goto(NSE_SGB_URL, timeout=10000)
@@ -218,7 +220,7 @@ def fetch_price_of_gold_from_ibja(n_th: Optional[int] = 1) -> float:
     7956.00
     """
     with sync_playwright() as p:
-        browser = p.chromium.launch(headless=(False if log_level == "DEBUG" else True))
+        browser = p.firefox.launch(headless=(False if log_level == "DEBUG" else True))
         page = browser.new_page()
 
         logger.info(f"fetching IBJA page at {IBJA_URL} - {n_th} time")
