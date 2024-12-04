@@ -28,8 +28,10 @@ jobs:
         uses: actions/cache@v4
         id: playwright-cache
         with:
-          path: ~/.cache/ms-playwright
-          key: ${{ runner.os }}-playwright
+          path: |
+            ~/.cache/ms-playwright
+            /var/cache/apt/archives
+          key: ${{ runner.os }}-${{ runner.arch }}-${{ github.sha }}--playwright
       - name: Setup and install playwright
         run: |
           playwright install --with-deps firefox
