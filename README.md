@@ -8,7 +8,7 @@ This tool tries to use publically available data and ✨maths✨ to advise you o
 
 **This does not recommend anything. Calculations, data or something else can be wrong. Do your own research before investing your money anywhere.**
 
-Look at how it informs you in [this](https://t.me/sgb_advisor) public Telegram channel!
+**Demo**: Output will being sent in [this](https://t.me/sgb_advisor) public Telegram channel at 11:00 AM IST every weekday!
 
 ## Tools used:
 
