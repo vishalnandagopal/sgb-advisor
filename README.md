@@ -59,19 +59,19 @@ Place the required env variables in a [`.env`](.env) file.
 
 ```env
 # How to notify the user. Accepted values are "telegram", "email" or "both"
-MODE=telegram
+SGB_MODE=telegram
 
 # Get token from BotFather on Telegram
-TELEGRAM_BOT_TOKEN=xxxxxxxxxx:xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+SGB_TELEGRAM_BOT_TOKEN=xxxxxxxxxx:xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 # Can be one or many users/channels
-TELEGRAM_CHAT_IDS=xxxxxxxxx,xxxxxxx,@sgb_advisor
+SGB_TELEGRAM_CHAT_IDS=xxxxxxxxx,xxxxxxx,@sgb_advisor
 
 # No one need to set any of these if you only want to send a message through telegram
-AWS_ACCESS_KEY=xxx
-AWS_SECRET_ACCESS_KEY=xxx
-AWS_SES_SENDER_EMAIL=SGB Advisor <sgb-advisor@your-verified-domain.com>
-AWS_SES_RECIPIENT=example@example.com
-AWS_REGION=us-east-1
+SGB_AWS_ACCESS_KEY=xxx
+SGB_AWS_SECRET_ACCESS_KEY=xxx
+SGB_AWS_SES_SENDER_EMAIL=SGB Advisor <sgb-advisor@your-verified-domain.com>
+SGB_AWS_SES_RECIPIENT=example@example.com
+SGB_AWS_REGION=us-east-1
 ```
 
 ## Sending results to someone
