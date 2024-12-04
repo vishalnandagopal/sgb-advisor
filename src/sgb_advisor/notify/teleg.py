@@ -2,6 +2,7 @@
 Send messages and files using the Telegram API
 """
 
+from json import dumps as json_dumps
 from json import loads as json_loads
 from os import getenv
 from pathlib import Path
@@ -10,15 +11,16 @@ from playwright.sync_api import sync_playwright
 from requests import get as r_get
 from requests import post as r_post
 
+from ..data import get_price_of_gold
 from ..logger import logger
 from ..models import SGB
-from .common import get_temp_file_path, write_table_html_to_file
+from .common import get_ist_time, get_temp_file_path, write_html_output
 
-TELEGRAM_BOT_TOKEN = getenv("TELEGRAM_BOT_TOKEN", "")
+TELEGRAM_BOT_TOKEN = getenv("SGB_TELEGRAM_BOT_TOKEN", "")
 """Telegram bot token. Get it from [BotFather](https://t.me/BotFather) on Telegram"""
 
 
-TELEGRAM_CHAT_IDS: list[str] = getenv("TELEGRAM_CHAT_IDS", "0").split(",")
+TELEGRAM_CHAT_IDS: list[str] = getenv("SGB_TELEGRAM_CHAT_IDS", "0").split(",")
 """Unique identifier for the target chat or username of the target channel (in the format @channelusername)"""
 
 
@@ -121,7 +123,8 @@ def validate_telegram_envs() -> bool:
 
 
 def create_and_send_message(
-    sgb_list: list[SGB], chat_ids: list[str] = TELEGRAM_CHAT_IDS
+    sgbs: list[SGB],
+    chat_ids: list[str] = TELEGRAM_CHAT_IDS,
 ) -> bool:
     """
     Creates a message with the given SGB list and sends it on Telegram
@@ -143,9 +146,13 @@ def create_and_send_message(
     True
     """
 
-    photo_path: Path = generate_screenshot_of_html(sgbs=sgb_list)
-    caption: str = get_top_n_sgbs_text(sgbs=sgb_list)
-    return send_message_with_photo(caption, photo_path, chat_ids)
+    photo_path: Path = generate_screenshot_of_html(sgbs)
+    caption: str = get_telegram_caption(sgbs)
+    return send_message_with_files(
+        files=[photo_path, get_json_file(sgbs)],
+        photo_captions=[caption, ""],
+        chat_ids=chat_ids,
+    )
 
 
 def send_message(message_content: str, chat_ids: list[str] = TELEGRAM_CHAT_IDS) -> bool:
@@ -197,9 +204,9 @@ def send_message(message_content: str, chat_ids: list[str] = TELEGRAM_CHAT_IDS) 
     return success
 
 
-def send_message_with_photo(
-    photo_caption: str,
-    photo_path: Path,
+def send_message_with_files(
+    files: list[Path],
+    photo_captions: list[str] | str,
     chat_ids: list[str] = TELEGRAM_CHAT_IDS,
 ) -> bool:
     """
@@ -207,10 +214,10 @@ def send_message_with_photo(
 
     Parameters
     ----------
-    photo_caption : str
-        The caption for the photo
-    photo_path : str | Path
-        The path to the photo to be sent
+    files : list[Path]
+        The files to send to every chat_id. Sent as individual messages
+    photo_captions : list[str]
+        The captions for every file. If the length of the captions list is not the same as the length of the files list, then the first caption is used for every file
     chat_ids : list[str]
         List of unique identifiers for the target chat or username of the target channel (in the format @channelusername)
 
@@ -230,41 +237,67 @@ def send_message_with_photo(
 
     success = True
 
-    for chat_id in chat_ids:
-        request_body = {
-            "caption": photo_caption,
-            "chat_id": chat_id,
-            "parse_mode": "MarkdownV2",
-        }
+    if len(photo_captions) != len(files):
+        photo_captions = [photo_captions[0] * len(files)]
 
-        if photo_path.suffix not in [".png"]:
-            msg = f"photos of {photo_path.suffix} format not allowed. Only png is supported"
+    for file, caption in zip(files, photo_captions):
+        file_id = ""
+        if file.suffix not in [".png", ".json"]:
+            msg = f'Only json and png files are allowed. "{file.suffix}" format not allowed.'
             logger.error(msg)
             raise ValueError(msg)
 
-        files = {
-            "document": (
-                photo_path.stem + photo_path.suffix,
-                open(photo_path, "rb"),
-                "image/.png",
-                {"Expires": "0"},
-            )
-        }
+        file_mime_type: str = "application/octet-stream"
 
-        response = json_loads(
-            r_post(f"{API_URL}/{API_METHOD}", data=request_body, files=files).text
-        )
+        if file.suffix == ".png":
+            file_mime_type = "image/png"
+        elif file.suffix == ".json":
+            file_mime_type = "application/json"
 
-        if not response["ok"]:
-            logger.error(
-                f"sould not sent message to {chat_id}. Error - {response['description']}"
-            )
-            success = False
+        for chat_id in chat_ids:
+            request_body = {
+                "caption": caption,
+                "chat_id": chat_id,
+                "parse_mode": "MarkdownV2",
+            }
 
-        else:
-            logger.info(
-                f"succesfully sent message to @{response['result']['chat']['username']} with message_id {response['result']['message_id']}"
-            )
+            if not file_id:
+                document = (
+                    file.stem + file.suffix,
+                    open(file, "rb"),
+                    file_mime_type,
+                    {"Expires": "0"},
+                )
+
+                response = json_loads(
+                    r_post(
+                        f"{API_URL}/{API_METHOD}",
+                        data=request_body,
+                        files={"document": document},
+                    ).text
+                )
+            else:
+                request_body["document"] = file_id
+
+                response = json_loads(
+                    r_post(
+                        f"{API_URL}/{API_METHOD}",
+                        data=request_body,
+                    ).text
+                )
+
+            if not response["ok"]:
+                logger.error(
+                    f"could not sent message to {chat_id}. Error - {response['description']}"
+                )
+                success = False
+
+            else:
+                logger.info(
+                    f"succesfully sent message to @{response['result']['chat']['username']} with message_id {response['result']['message_id']}"
+                )
+                if not file_id:
+                    file_id = response["result"]["document"]["file_id"]
 
     return success
 
@@ -289,7 +322,7 @@ def generate_screenshot_of_html(sgbs: list[SGB]) -> Path:
     Path("E:\\Code\\sgb_advisor\\tmp\\1730403483.2583637-9432.png")
     """
 
-    html_file_path = write_table_html_to_file(sgbs)
+    html_file_path = write_html_output(sgbs)
 
     with sync_playwright() as p:
         browser = p.firefox.launch()
@@ -307,9 +340,9 @@ def generate_screenshot_of_html(sgbs: list[SGB]) -> Path:
         return photo_path
 
 
-def get_top_n_sgbs_text(sgbs: list[SGB], n: int = 3) -> str:
+def get_telegram_caption(sgbs: list[SGB], n: int = 3) -> str:
     """
-    Get text with just top n SGBs.
+    Returns a caption for the telegram post
 
     Parameters
     ----------
@@ -340,6 +373,29 @@ def get_top_n_sgbs_text(sgbs: list[SGB], n: int = 3) -> str:
 
     disclaimer_text = "\n[Disclaimers](https://github.com/vishalnandagopal/sgb-advisor/blob/master/README.md#disclaimers)"
 
-    text += disclaimer_text
+    gold_price_text = f"\nGold price \\- ₹{str(get_price_of_gold()).replace(".","\\.")}"
+
+    text += gold_price_text + disclaimer_text
 
     return text
+
+
+def get_json_file(sgbs: list[SGB]) -> Path:
+    json_path = get_temp_file_path("json")
+
+    with open(json_path, "w") as f:
+        f.write(get_json_representation(sgbs))
+
+    logger.info(f"saved json to {json_path}")
+
+    return json_path
+
+
+def get_json_representation(sgbs: list[SGB]) -> str:
+    d = {
+        "time": str(get_ist_time()),
+        "gold_price": get_price_of_gold(),
+        "disclaimer": "https://github.com/vishalnandagopal/sgb-advisor/blob/master/README.md#disclaimers",
+        "sgbs": [sgb.to_dict() for sgb in sgbs],
+    }
+    return json_dumps(d, indent=None)

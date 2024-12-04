@@ -8,7 +8,7 @@ from playwright.sync_api import TimeoutError as PlaywrightTimeoutError
 from playwright.sync_api import sync_playwright
 from typing_extensions import TypeIs
 
-from .logger import logger
+from .logger import logger, log_level
 from .models import SGB
 from .quick_mafs import calculate_sgb_xirr
 
@@ -79,21 +79,31 @@ def get_sgbs_from_nse_site(n_th: Optional[int] = 1) -> list[SGB]:
     [SGB1, SGB2]
     """
     with sync_playwright() as p:
-        browser = p.firefox.launch()
+        # Was firefox before, but NSE website is very buggy with it
+        browser = p.chromium.launch(headless=(False if log_level == "DEBUG" else True))
         page = browser.new_page()
-
+        # current_user_agent: str = page.evaluate("navigator.userAgent")
+        # page.close()
+        # new_user_agent = current_user_agent.replace("Headless", "")
+        # logger.debug(f"Setting new user agent to {new_user_agent}")
+        # page = browser.new_page(user_agent=new_user_agent)
         logger.info(f"fetching NSE SGB page at {NSE_SGB_URL} - {n_th} time(s)")
-        page.goto(NSE_SGB_URL, timeout=100000)
+        # For some weird ass reason, NSE website fails to load half the times if playwright opens it immediately after the browser has opened. Loading a URL first and after that switching to NSE site.
+        # This could also be a firefox issue
+        page.goto("https://www.vishalnandagopal.com")
+        page.goto(NSE_SGB_URL, timeout=10000)
 
         SGBLTP_QUERY_SEL = "#sgbTable > tbody > tr > td:nth-child(7)"
         SGBNAME_QUERY_SEL = "#sgbTable > tbody > tr > td:nth-child(1)"
 
         # NSE website loads info after page load. So wait for this to appear
         try:
-            page.wait_for_selector(SGBLTP_QUERY_SEL, timeout=50000)
+            page.wait_for_selector(SGBLTP_QUERY_SEL, timeout=10000)
         except PlaywrightTimeoutError:
-            msg: str = "could not fetch SGBs info from NSE site"
-            logger.error(msg)
+            msg: str = (
+                f"could not fetch SGBs info from NSE site - tried {n_th} times(s)"
+            )
+            logger.warning(msg)
             raise SiteNotLoadedError(msg)
 
         sgb_ltp_results = page.query_selector_all(selector=SGBLTP_QUERY_SEL)
@@ -163,14 +173,19 @@ def get_sgbs() -> list[SGB]:
     [SGB1, SGB2, SGB3]
     """
     sgbs_trading: list[SGB] = list()
-    for i in range(1, 11):
-        # try till it succeeds?
-        if sgbs_trading:
-            break
+    i = 0
+    # try till it succeeds?
+    while not sgbs_trading and i < 10:
+        i += 1
         try:
             sgbs_trading = get_sgbs_from_nse_site(i)
         except SiteNotLoadedError:
             pass
+
+    if not sgbs_trading:
+        msg = "could not fetch data from NSE website"
+        logger.error(msg)
+        raise RuntimeError(msg)
 
     current_gold_price: float = get_price_of_gold()
 
@@ -203,18 +218,21 @@ def fetch_price_of_gold_from_ibja(n_th: Optional[int] = 1) -> float:
     7956.00
     """
     with sync_playwright() as p:
-        browser = p.firefox.launch()
+        browser = p.chromium.launch(headless=(False if log_level == "DEBUG" else True))
         page = browser.new_page()
 
         logger.info(f"fetching IBJA page at {IBJA_URL} - {n_th} time")
         page.goto(IBJA_URL, timeout=100000)
 
         FINE_GOLD_PRICE_QUERY_SEL = "#lblFineGold999"
-
         try:
-            page.wait_for_selector(FINE_GOLD_PRICE_QUERY_SEL, timeout=100000)
+            page.wait_for_selector(FINE_GOLD_PRICE_QUERY_SEL, timeout=50000)
         except PlaywrightTimeoutError:
-            page.wait_for_selector(FINE_GOLD_PRICE_QUERY_SEL, timeout=200000)
+            msg: str = (
+                f"could not fetch SGBs info from NSE site - tried {n_th} times(s)"
+            )
+            logger.warning(msg)
+            raise SiteNotLoadedError(msg)
 
         _gold_price_element = page.query_selector(selector=FINE_GOLD_PRICE_QUERY_SEL)
 
@@ -252,14 +270,19 @@ def get_price_of_gold() -> float:
 
     gold_price: float = 0
 
-    for i in range(1, 11):
-        # try till it succeeds?
-        if gold_price:
-            break
+    i = 0
+    # try till it succeeds?
+    while not gold_price and i < 10:
+        i += 1
         try:
             gold_price = fetch_price_of_gold_from_ibja(i)
         except SiteNotLoadedError:
             pass
+
+    if not gold_price:
+        msg = "could not fetch gold price from IBJA"
+        logger.error(msg)
+        raise RuntimeError(msg)
 
     logger.info(f"fetched price of gold from IBJA as {gold_price}")
     return gold_price

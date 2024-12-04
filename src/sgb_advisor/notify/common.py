@@ -2,15 +2,17 @@
 Commons functions that can be used by all methods of notifications
 """
 
-from datetime import datetime
+from datetime import datetime, timedelta, timezone
+from functools import lru_cache
 from os.path import dirname
 from pathlib import Path
 from random import randint
 from tempfile import gettempdir
 from typing import Optional
 
-from ..data import SGB
+from ..data import get_price_of_gold
 from ..logger import logger
+from ..models import SGB
 
 
 def get_temp_file_path(file_extension: Optional[str] = "html") -> Path:
@@ -74,60 +76,35 @@ def get_table_row_html(sgb: SGB) -> str:
         <td>{sgb.ltp}</td>
         <td>{sgb.maturity_date.day} {sgb.maturity_date.strftime("%B %Y")}</td>
         <td>{sgb.xirr}</td>
-    </tr>
-"""
-
-
-def get_email_body_html(sgbs: list[SGB]) -> str:
-    """
-    Reads the template at ./assets/email_template.html and returns the HTML version of the email for "modern" clients.
-
-    Parameters
-    ----------
-    list[sgb] : List of SGBs
-
-    Returns
-    -------
-    str : Templated HTML
-
-
-    Examples
-    --------
-    >>> get_email_body_html(sgbs)
-    "<html>....</html>"
-    """
-
-    STRING_TO_REPLACE_IN_TEMPLATE = '<section id="generated-results"></section>'
-
-    with open(dirname(__file__) + "/../assets/email_template.html") as f:
-        email_template = f.read()
-
-    replacement_string = get_table_html(sgbs)
-
-    return email_template.replace(STRING_TO_REPLACE_IN_TEMPLATE, replacement_string, 1)
+    </tr>\n"""
 
 
 def get_table_html(sgbs: list[SGB]) -> str:
-    table_html: str = (
-        f"""<table id="sgb-returns-table">
-        <caption>Estimated returns of each SGB</caption>
-        <thead>
-            <tr>
-                <th scope="col">NSE Symbol</th>
-                <th scope="col">LTP</th>
-                <th scope="col">Maturity Date</th>
-                <th scope="col">XIRR (%)</th>
-            </tr>
-        </thead>
+    gold_price = get_price_of_gold()
+    dt = get_ist_time()
+    if len(sgbs) > 0:
+        return f"""<section id="app-generated-results-placeholder">
+        <table id="sgb-returns-table">
+            <caption>Estimated returns of each SGB</caption>
+            <thead>
+                <tr>
+                    <th scope="col">NSE Symbol</th>
+                    <th scope="col">LTP</th>
+                    <th scope="col">Maturity Date</th>
+                    <th scope="col">XIRR (%)</th>
+                </tr>
+            </thead>
             <tbody>
                 {"".join(get_table_row_html(sgb) for sgb in sgbs)}
+                <tr>
+                    <td class="tcb" colspan="3">Gold price: ₹{gold_price}</td>
+                    <td class="tcb">{dt.date()}</td>
+                </tr>
             </tbody>
-        </table>"""
-        if len(sgbs) > 0
-        else "<h2>No recommendations<h2>"
-    )
-
-    return table_html
+        </table>
+    </section>"""
+    else:
+        return '<section id="app-generated-results-placeholder"><h2>No recommendations<h2></section>'
 
 
 def write_html_to_file(html: str) -> Path:
@@ -152,7 +129,7 @@ def write_html_to_file(html: str) -> Path:
 
     output_file = get_temp_file_path("html")
 
-    with open(output_file, "w") as f:
+    with open(output_file, "w", encoding="utf-8") as f:
         f.write(html)
         return output_file
 
@@ -162,9 +139,33 @@ def write_html_to_file(html: str) -> Path:
     raise RuntimeError(msg)
 
 
-def write_table_html_to_file(sgbs: list[SGB]) -> Path:
+@lru_cache(maxsize=None)
+def get_ist_time() -> datetime:
     """
-    Write an HTML table to a file. Generates a string with all the SGBs and their returns. Calls the `write_html_to_file()` function to write the HTML
+    Get a datetime object that represents the current time in IST
+
+    Parameters
+    ----------
+    None
+
+    Returns
+    -------
+    datetime
+        Time in IST
+
+    Examples
+    --------
+    >>> get_ist_time()
+    datetime.datetime(2024, 11, 20, 19, 50, 21, 802675, tzinfo=datetime.timezone.utc)
+    """
+    utc_now = datetime.now(timezone.utc)
+    ist_offset = timedelta(hours=5, minutes=30)
+    return utc_now + ist_offset
+
+
+def write_html_output(sgbs: list[SGB]) -> Path:
+    """
+    Write the HTML output showing all data to a file. Generates a string with all the SGBs and their returns. Calls the `write_html_to_file()` function to write the HTML
 
     Parameters
     ----------
@@ -178,30 +179,22 @@ def write_table_html_to_file(sgbs: list[SGB]) -> Path:
 
     Examples
     --------
-    >>> write_table_html_to_file([SGB1, SGB2, SGB3])
+    >>> write_html_output([SGB1, SGB2, SGB3])
     Path("E:/Code/sgb_advisor/tmp/sgb_advisor/1730403483.2583637-9432.html")
     """
-    table_html = get_table_html(sgbs)
-
-    html = f"""<html>
-    <head>
-        <title>SGB advisor output</title>
-        <style>
-            table {{
-                border-collapse: collapse;
-                border: 0.25px solid black;
-            }}
-
-            th,
-            td {{
-                border: 0.125px solid black;
-                padding: 0.5rem 0.625rem;
-            }}
-        </style>
-    </head>
-        </body>
-            {table_html}
-        </body>
-    </html>"""
+    html = generate_html_from_template(sgbs)
 
     return write_html_to_file(html)
+
+
+def generate_html_from_template(sgbs: list[SGB]):
+    STRING_TO_REPLACE_IN_TEMPLATE = (
+        '<section id="app-generated-results-placeholder"></section>'
+    )
+
+    with open(dirname(__file__) + "/../assets/template.html") as f:
+        email_template = f.read()
+
+    replacement_string = get_table_html(sgbs)
+
+    return email_template.replace(STRING_TO_REPLACE_IN_TEMPLATE, replacement_string, 1)

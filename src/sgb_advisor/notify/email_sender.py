@@ -7,26 +7,25 @@ from os import getenv
 from boto3 import client as aws_client
 from botocore.exceptions import ClientError
 
-from .common import get_email_body_html
-
 from ..data import SGB
 from ..logger import logger
+from .common import generate_html_from_template
 
-AWS_ACCESS_KEY: str = getenv("AWS_ACCESS_KEY", "")
+AWS_ACCESS_KEY: str = getenv("SGB_AWS_ACCESS_KEY", "")
 """AWS access key from the AWS console. Try to create one for a non-root user"""
 
-AWS_SECRET_ACCESS_KEY = getenv("AWS_SECRET_ACCESS_KEY", "")
+AWS_SECRET_ACCESS_KEY = getenv("SGB_AWS_SECRET_ACCESS_KEY", "")
 """AWS secret access key from the AWS console. Try to create one for a non-root user"""
 
 # This address must be verified with Amazon SES.
-SENDER: str = getenv("AWS_SES_SENDER_EMAIL", "")
+SENDER: str = getenv("SGB_AWS_SES_SENDER_EMAIL", "")
 """The sender from which the email will appear to be sent by. Must be verified in Amazon SES dashboard"""
 
 # If your account is still in the sandbox, this address must be verified.
-RECIPIENT: str = getenv("AWS_SES_RECIPIENT", "")
+RECIPIENT: str = getenv("SGB_AWS_SES_RECIPIENT", "")
 """The recipient of the email. If your account is still in the AWS SES sandbox, the recipient must also verify his email"""
 
-AWS_REGION = getenv("AWS_REGION", "")
+AWS_REGION = getenv("SGB_AWS_REGION", "")
 """The AWS region where the SES resource will be hosted"""
 
 SUBJECT = "SGBs you can consider buying"
@@ -64,7 +63,7 @@ def get_email_body_plain_text(sgbs: list[SGB]):
     return body_text
 
 
-def send_email(sgbs: list[SGB]) -> bool:
+def send_mail(sgbs: list[SGB]) -> bool:
     """
     Sends an email using AWS SES
 
@@ -81,6 +80,13 @@ def send_email(sgbs: list[SGB]) -> bool:
     >>> send_email(sgbs)
     True
     """
+    return send_aws_email(
+        generate_html_from_template(sgbs),
+        get_email_body_plain_text(sgbs),
+    )
+
+
+def send_aws_email(email_html: str, email_plain_text: str):
     required_envs = {
         AWS_ACCESS_KEY,
         AWS_SECRET_ACCESS_KEY,
@@ -111,13 +117,10 @@ def send_email(sgbs: list[SGB]) -> bool:
             },
             Message={
                 "Body": {
-                    "Html": {
-                        "Charset": CHARSET,
-                        "Data": get_email_body_html(sgbs),
-                    },
+                    "Html": {"Charset": CHARSET, "Data": email_html},
                     "Text": {
                         "Charset": CHARSET,
-                        "Data": get_email_body_html(sgbs),
+                        "Data": email_plain_text,
                     },
                 },
                 "Subject": {

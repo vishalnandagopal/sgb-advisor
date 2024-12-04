@@ -16,9 +16,9 @@ class SGB:
     def __init__(
         self,
         nse_symbol: str,
-        ltp: float,
+        ltp: float | int,
         issue_price: float | int,
-        interest_rate: float,
+        interest_rate: float | int,
         maturity_date: date,
     ):
         """
@@ -28,11 +28,11 @@ class SGB:
         ----------
         nse_symboL : str
             Ticker on the National Stock Exchange
-        ltp : float
+        ltp : float | int
             Last traded price on NSE
-        issue_price : float
+        issue_price : float | int
             Price at which RBI has issued the bond. The interest is calculated on this.
-        interest_rate : float
+        interest_rate : float | int
             The rate of interest on the bond, paid on self.issue_price
         maturity_date: datetime.date
             The date of maturity of the bond
@@ -87,4 +87,14 @@ class SGB:
 
     def __repr__(self) -> str:
         """Look at SGB.__str__"""
-        return str(self)
+        return f"<SGB [{str(self)}]>"
+
+    def to_dict(self) -> dict[str, float | int | str]:
+        return {
+            "nse_symbol": self.nse_symbol,
+            "ltp": self.ltp,
+            "issue_price": self.issue_price,
+            "interest_rate": self.interest_rate,
+            "maturity_date": str(self.maturity_date),
+            "xirr": self.xirr,
+        }

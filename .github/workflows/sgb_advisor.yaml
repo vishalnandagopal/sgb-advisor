@@ -21,11 +21,17 @@ jobs:
         with:
           python-version: "3.13"
           cache: "pip" # caching pip dependencies
-      - name: Install requirements and setup playwright
+      - name: Install requirements
         run: |
           pip install -r requirements.txt
-          playwright install firefox
-          playwright install-deps
+      - name: Setup playwright
+        id: playwright-cache
+        with:
+          path: |
+            ~/.cache/ms-playwright
+          key: ${{ runner.os }}-playwright
+        run: |
+          playwright install --with-deps chromium
       - name: Run the script
         env:
           AWS_ACCESS_KEY: ${{ secrets.AWS_ACCESS_KEY }}
