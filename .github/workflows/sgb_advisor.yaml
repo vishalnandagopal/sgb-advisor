@@ -1,5 +1,7 @@
 ---
 name: SGB Advisor
+permissions:
+  contents: read
 on:
   schedule:
     - cron: "30 5 * * 1-5"
