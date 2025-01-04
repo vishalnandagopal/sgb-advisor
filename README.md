@@ -42,7 +42,7 @@ You can use any of the 3 methods given below
 2. Docker
 
     ```sh
-    sudo docker build . -t vishalnandagopal/sgb-advisor:latest -f Dockerfile
+    sudo docker buildx build -t vishalnandagopal/sgb-advisor:latest -f Dockerfile .
     # Setup env before this
     sudo docker run --env-file .env vishalnandagopal/sgb-advisor:latest
     ```
@@ -117,3 +117,5 @@ This is just a tool to maximize XIRR on interest payments, and to find possible 
 -   The price of Gold when the SGB matures will be the same as it is today. While this may sound dumb, any increase in the price of gold should lead to a somewhat similar increase in redemption prices of all SGBs. You way think that gold can fall or increase in between, but that will affect **all** gold investments, not just SGB
 
 -   You are interested in gold and have finalized on SGB as a product, and are just confused among different SGBs.
+
+Copyright (C) 2025 Vishal N (hi@vishalnandagopal.com)

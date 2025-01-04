@@ -1,0 +1,64 @@
+---
+name: Create docker image
+permissions:
+  contents: read
+  packages: write
+on:
+  push:
+    branches:
+      - master
+    paths:
+      - "**.py"
+      - "src/"
+      - ".dockerignore"
+      - "Dockerfile"
+      - ".github/workflows/create-docker-image.yaml"
+      - ".python-version"
+      - "requirements.txt"
+      - "pyproject.toml"
+  workflow_dispatch:
+
+jobs:
+  create-docker-image:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout the repo
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+      - name: Create and push the image
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_REPOSITORY: ${{ vars.GITHUB_REPOSITORY }}
+          GITHUB_REPOSITORY_OWNER: ${{ vars.GITHUB_REPOSITORY_OWNER }}
+        run: |
+          echo "${GH_TOKEN}" | docker login ghcr.io -u "${GITHUB_REPOSITORY_OWNER}" --password-stdin
+
+          export DOCKER_BUILD_GIT_COMMIT=`git rev-parse HEAD`
+          export DOCKER_BUILD_SHORT_GIT_COMMIT=`git rev-parse --short HEAD`
+          export DOCKER_BUILD_TIME=`date --rfc-3339=seconds`
+          export DOCKER_BASE_IMAGE="python:`cat .python-version | tr -d '[:space:]'`-slim-bullseye"
+
+          # pull the image first so that older layers can be reused. Fine if it fails
+          # docker pull ghcr.io/${GITHUB_REPOSITORY}:latest || true # Doesn't seem to make it quicker
+
+
+          docker buildx build . \
+          --build-arg BASE_IMAGE="${DOCKER_BASE_IMAGE}" \
+          --label "org.opencontainers.image.created=${DOCKER_BUILD_TIME}" \
+          --label "org.opencontainers.image.version=${DOCKER_BUILD_GIT_COMMIT}" \
+          --label "org.opencontainers.image.source=${GITHUB_REPOSITORY}" \
+          -f Dockerfile \
+          -t "ghcr.io/${GITHUB_REPOSITORY}:latest" \
+          -t "ghcr.io/${GITHUB_REPOSITORY}:${DOCKER_BUILD_SHORT_GIT_COMMIT}" \
+          -t "ghcr.io/${GITHUB_REPOSITORY}:${DOCKER_BUILD_GIT_COMMIT}"
+
+          docker image ls --all
+
+          docker push "ghcr.io/${GITHUB_REPOSITORY}:latest"
+          docker push "ghcr.io/${GITHUB_REPOSITORY}:${DOCKER_BUILD_SHORT_GIT_COMMIT}"
+          docker push "ghcr.io/${GITHUB_REPOSITORY}:${DOCKER_BUILD_GIT_COMMIT}"
+      - name: Logout from ghcr.io
+        if: always()
+        run: |
+          docker logout ghcr.io || true

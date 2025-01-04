@@ -1,5 +1,18 @@
+tmp/
+output/
+testing.py
+test.py
+*.log
+.python-version
+
 .git
+.github
+.gitignore
 Dockerfile
+.dockerignore
+uv.lock
+.pre-commit-config.yaml
+build-and-run.sh
 
 # python generated files
 __pycache__/
@@ -18,9 +31,3 @@ wheels/
 .vscode/
 .DS_Store
 *.env
-
-tmp/
-output/
-testing.py
-test.py
-*.log

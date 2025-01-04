@@ -8,6 +8,10 @@ on:
   push:
     branches:
       - master
+    paths-ignore:
+      - "Dockerfile"
+      - ".github/workflows/create-docker-image.yaml"
+      - ".dockerignore"
   workflow_dispatch:
 
 jobs:
@@ -46,5 +50,5 @@ jobs:
           SGB_TELEGRAM_CHAT_IDS: ${{ secrets.SGB_TELEGRAM_CHAT_IDS }}
           SGB_AWS_REGION: ${{ vars.SGB_AWS_REGION }}
           SGB_MODE: ${{ vars.SGB_MODE }}
-          SGB_LOG_LEVEL : ${{ vars.SGB_LOG_LEVEL }}
+          SGB_LOG_LEVEL: ${{ vars.SGB_LOG_LEVEL }}
         run: python3 app.py
