@@ -6,7 +6,6 @@ from typing import Optional
 
 from playwright.sync_api import TimeoutError as PlaywrightTimeoutError
 from playwright.sync_api import sync_playwright
-from typing_extensions import TypeIs
 
 from .logger import log_level, logger
 from .models import SGB
@@ -95,8 +94,9 @@ def get_sgbs_from_nse_site(n_th: Optional[int] = 1) -> list[SGB]:
         page.goto("https://www.vishalnandagopal.com")
         page.goto(NSE_SGB_URL, timeout=10000)
 
-        SGBLTP_QUERY_SEL = "#sgbTable > tbody > tr > td:nth-child(7)"
         SGBNAME_QUERY_SEL = "#sgbTable > tbody > tr > td:nth-child(1)"
+        SGBLTP_QUERY_SEL = "#sgbTable > tbody > tr > td:nth-child(7)"
+        SGBVOL_QUERY_SEL = "#sgbTable > tbody > tr > td:nth-child(11)"
 
         # NSE website loads info after page load. So wait for this to appear
         try:
@@ -110,39 +110,38 @@ def get_sgbs_from_nse_site(n_th: Optional[int] = 1) -> list[SGB]:
 
         sgb_ltp_results = page.query_selector_all(selector=SGBLTP_QUERY_SEL)
         sgb_name_results = page.query_selector_all(selector=SGBNAME_QUERY_SEL)
-
-        def valid_sgb_checker(to_check: str | None) -> TypeIs[str]:
-            if to_check:
-                return to_check.startswith("SGB")
-            return False
-
-        _sgb_values_str: map[str] = map(
-            lambda x: x.replace(",", ""),
-            filter(None, map(lambda x: x.text_content(), sgb_ltp_results)),
-        )
-
-        _sgb_names_str: filter[str] = filter(
-            valid_sgb_checker,
-            map(lambda x: x.text_content(), sgb_name_results),
-        )
+        sgb_volume_results = page.query_selector_all(selector=SGBVOL_QUERY_SEL)
 
         sgbs_trading: list[SGB] = list()
 
         csv_contents = read_scrips_file()
 
-        for name, price in zip(_sgb_names_str, _sgb_values_str):
+        for n, p, v in zip(sgb_name_results, sgb_ltp_results, sgb_volume_results):
             try:
+                name = n.text_content()
+                p_str = p.text_content()
+                v_str = v.text_content()
+                if not (
+                    (name and name.startswith("SGB"))
+                    and (p_str)
+                    and (v_str and v_str != "-")
+                ):
+                    continue
+
                 row = list(filter(lambda x: x[0].strip() == name, csv_contents))[0]
                 _issue_date = list(map(int, row[4].split("/")))
-                sgbs_trading.append(
-                    SGB(
-                        row[0],
-                        float(price),
-                        float(row[5]),
-                        float(row[2].replace("%", "").strip()),
-                        datetime(_issue_date[2], _issue_date[1], _issue_date[0]).date(),
+                if int(v_str.replace(",", "")) > 0:
+                    sgbs_trading.append(
+                        SGB(
+                            row[0],
+                            float(p_str.replace(",", "")),
+                            float(row[5]),
+                            float(row[2].replace("%", "").strip()),
+                            datetime(
+                                _issue_date[2], _issue_date[1], _issue_date[0]
+                            ).date(),
+                        )
                     )
-                )
 
             except Exception as e:
                 print(f'Couldn\'t add "{name}" to sgb_values - {e}')
