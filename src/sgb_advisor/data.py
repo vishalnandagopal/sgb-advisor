@@ -220,7 +220,7 @@ def fetch_price_of_gold_from_ibja(n_th: Optional[int] = 1) -> float:
     """
     with sync_playwright() as p:
         browser = p.firefox.launch(headless=(False if log_level == "DEBUG" else True))
-        page = browser.new_page()
+        page = browser.new_page(java_script_enabled=False)
 
         logger.info(f"fetching IBJA page at {IBJA_URL} - {n_th} time")
         page.goto(IBJA_URL, timeout=100000)

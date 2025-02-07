@@ -6,19 +6,19 @@ readme = "README.md"
 requires-python = ">=3.13"
 dependencies = [
     "loguru>=0.7.3",
-    "pytest-playwright>=0.6.2",
+    "pytest-playwright>=0.7.0",
     "python-dotenv>=1.0.1",
     "pyxirr>=0.10.6",
     "requests>=2.32.3",
-    "boto3>=1.36.5",
+    "boto3>=1.36.26",
 ]
 
 [tool.uv]
 dev-dependencies = [
-    "boto3-stubs>=1.36.5",
+    "boto3-stubs>=1.36.26",
     "icecream>=2.1.4",
-    "mypy>=1.14.1",
+    "mypy>=1.15.0",
     "pre-commit>=4.1.0",
-    "ruff>=0.9.3",
+    "ruff>=0.9.7",
     "types-requests>=2.32.0.20241016",
 ]
