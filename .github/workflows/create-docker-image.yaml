@@ -45,14 +45,15 @@ jobs:
           # docker pull ghcr.io/${GITHUB_REPOSITORY}:latest || true # Doesn't seem to make it quicker
 
 
-          docker buildx build . \
+          docker buildx build \
           --label "org.opencontainers.image.created=${DOCKER_BUILD_TIME}" \
           --label "org.opencontainers.image.version=${DOCKER_BUILD_GIT_COMMIT}" \
           --label "org.opencontainers.image.source=${GITHUB_REPOSITORY_URL}" \
-          -f Dockerfile \
-          -t "ghcr.io/${GITHUB_REPOSITORY}:latest" \
-          -t "ghcr.io/${GITHUB_REPOSITORY}:${DOCKER_BUILD_SHORT_GIT_COMMIT}" \
-          -t "ghcr.io/${GITHUB_REPOSITORY}:${DOCKER_BUILD_GIT_COMMIT}"
+          --tag "ghcr.io/${GITHUB_REPOSITORY}:latest" \
+          --tag "ghcr.io/${GITHUB_REPOSITORY}:${DOCKER_BUILD_SHORT_GIT_COMMIT}" \
+          --tag "ghcr.io/${GITHUB_REPOSITORY}:${DOCKER_BUILD_GIT_COMMIT}" \
+          --file Dockerfile \
+          .
 
           docker image ls --all
 
@@ -60,7 +61,9 @@ jobs:
           docker push "ghcr.io/${GITHUB_REPOSITORY}:${DOCKER_BUILD_SHORT_GIT_COMMIT}"
           docker push "ghcr.io/${GITHUB_REPOSITORY}:${DOCKER_BUILD_GIT_COMMIT}"
 
-      - name: Logout from ghcr.io
+      - name: Docker cleanup
         if: always()
         run: |
           docker logout ghcr.io || true
+          docker system df
+          docker system prune -f -a

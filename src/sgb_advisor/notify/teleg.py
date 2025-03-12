@@ -52,7 +52,7 @@ def test_bot_status() -> bool:
 
     if response["ok"]:
         logger.info(
-            f'telegram bot is be authenticated and running at "@{response['result']['username']}"'
+            f'telegram bot is be authenticated and running at "@{response["result"]["username"]}"'
         )
         return True
 
@@ -369,11 +369,13 @@ def get_telegram_caption(sgbs: list[SGB], n: int = 3) -> str:
 
     for sgb in sgbs[:n]:
         # Replacing . in XIRR  with \. since . is reserved for some reason in the markdown mode in Telegram API
-        text += f"\n\n`{sgb.nse_symbol}` \\- ₹{str(sgb.ltp).replace(".","\\.")} \\- {str(sgb.xirr).replace(".","\\.")}%"
+        text += f"\n\n`{sgb.nse_symbol}` \\- ₹{str(sgb.ltp).replace('.', '\\.')} \\- {str(sgb.xirr).replace('.', '\\.')}%"
 
     disclaimer_text = "\n[Disclaimers](https://github.com/vishalnandagopal/sgb-advisor/blob/master/README.md#disclaimers)"
 
-    gold_price_text = f"\nGold price \\- ₹{str(get_price_of_gold()).replace(".","\\.")}"
+    gold_price_text = (
+        f"\nGold price \\- ₹{str(get_price_of_gold()).replace('.', '\\.')}"
+    )
 
     text += gold_price_text + disclaimer_text
 

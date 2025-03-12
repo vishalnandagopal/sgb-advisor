@@ -131,14 +131,14 @@ def send_aws_email(email_html: str, email_plain_text: str):
             Source=SENDER,
         )
         logger.info(
-            f"email sent to {RECIPIENT[:4] + '****' + RECIPIENT[-9:]}! Message ID: {response["MessageId"]}"
+            f"email sent to {RECIPIENT[:4] + '****' + RECIPIENT[-9:]}! Message ID: {response['MessageId']}"
         )
         return True
     except ClientError as e:
         error_msg = "error sending email"
 
         if "Error" in e.response and "Message" in e.response["Error"]:
-            error_msg += f" - {e.response["Error"]['Message']}"
+            error_msg += f" - {e.response['Error']['Message']}"
 
         logger.error(error_msg)
 

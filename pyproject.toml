@@ -7,18 +7,18 @@ requires-python = ">=3.13"
 dependencies = [
     "loguru>=0.7.3",
     "pytest-playwright>=0.7.0",
-    "python-dotenv>=1.0.1",
+    "python-dotenv>=1.1.0",
     "pyxirr>=0.10.6",
     "requests>=2.32.3",
-    "boto3>=1.36.26",
+    "boto3>=1.37.23",
 ]
 
 [tool.uv]
 dev-dependencies = [
-    "boto3-stubs>=1.36.26",
+    "boto3-stubs>=1.37.23",
     "icecream>=2.1.4",
     "mypy>=1.15.0",
-    "pre-commit>=4.1.0",
-    "ruff>=0.9.7",
-    "types-requests>=2.32.0.20241016",
+    "pre-commit>=4.2.0",
+    "ruff>=0.11.2",
+    "types-requests>=2.32.0.20250328",
 ]
