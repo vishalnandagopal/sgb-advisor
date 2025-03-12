@@ -59,16 +59,18 @@ def guess_mode_of_notification() -> set[str]:
     if "both" in mode:
         mode = {"email", "telegram"}
 
-    if mode == {""}:
+    if "" in mode:
         mode.remove("")
-        # Guessing mode by looking at which env variables are set. Telegram is checked first because it is the most likely to be set
+        # Guessing mode(s) by looking at which env variables are set
         if getenv("SGB_TELEGRAM_BOT_TOKEN"):
             mode.add("telegram")
         if getenv("SGB_AWS_ACCESS_KEY"):
             mode.add("email")
 
     if not mode:
-        msg: str = f'could not guess mode of operation . It is currently set as "{mode}". Output will only be written to file and not sent anywhere.'
+        msg: str = f"""could not guess mode of operation. It is currently {
+            f"set as {mode}" if "" not in mode and len(mode) >= 1 else "not set"
+        }. Output will only be written to file and not sent anywhere."""
 
         logger.error(msg)
         raise RuntimeError(msg)

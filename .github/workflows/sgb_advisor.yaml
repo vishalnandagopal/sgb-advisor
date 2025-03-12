@@ -11,7 +11,9 @@ on:
     paths-ignore:
       - "Dockerfile"
       - ".github/workflows/create-docker-image.yaml"
+      - ".github/workflows/codeql.yaml"
       - ".dockerignore"
+      - "README.md"
   workflow_dispatch:
 
 jobs:

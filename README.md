@@ -8,7 +8,7 @@ This tool tries to use publically available data and ✨maths✨ to advise you o
 
 **This does not recommend anything. Calculations, data or something else can be wrong. Do your own research before investing your money anywhere.**
 
-**Demo**: Output will being sent in [this](https://t.me/sgb_advisor) public Telegram channel at 11:00 AM IST every weekday!
+**Demo**: Output will being sent in [this](https://t.me/sgb_advisor) public Telegram channel at 10:00 AM IST every weekday!
 
 ## Tools used:
 
@@ -33,7 +33,7 @@ You can use any of the 3 methods given below
 
     ```sh
     pip install uv
-    # Creates venv automatically
+    # uv sync creates venv and installs dependencies automatically
     uv sync
     # Setup env before this
     python app.py
@@ -42,20 +42,19 @@ You can use any of the 3 methods given below
 2. Docker
 
     ```sh
-    sudo docker buildx build -t vishalnandagopal/sgb-advisor:latest -f Dockerfile .
     # Setup env before this
-    sudo docker run --env-file .env vishalnandagopal/sgb-advisor:latest
+    docker run --env-file .env ghcr.io/vishalnandagopal/sgb-advisor:latest
     ```
 
 3. Github actions
 
     - An action is already setup [here](./.github/workflows/sgb_advisor.yaml).
-    - Clone the repo, enable the action (if disabled), setup the required secrets and envs.
+    - Clone the repo, enable the action in repo settings, setup the required GitHub secrets and vars/envs.
     - Change the timings of the cron job in the same file as per your requirements.
 
 ## Environment variables
 
-Place the required env variables in a [`.env`](.env) file.
+Place the required env variables in an [`.env`](.env) file.
 
 ```env
 # How to notify the user. Accepted values are "telegram", "email" or "both"
