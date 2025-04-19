@@ -14,24 +14,22 @@ from .common import generate_html_from_template
 AWS_ACCESS_KEY: str = getenv("SGB_AWS_ACCESS_KEY", "")
 """AWS access key from the AWS console. Try to create one for a non-root user"""
 
-AWS_SECRET_ACCESS_KEY = getenv("SGB_AWS_SECRET_ACCESS_KEY", "")
+AWS_SECRET_ACCESS_KEY: str = getenv("SGB_AWS_SECRET_ACCESS_KEY", "")
 """AWS secret access key from the AWS console. Try to create one for a non-root user"""
 
-# This address must be verified with Amazon SES.
 SENDER: str = getenv("SGB_AWS_SES_SENDER_EMAIL", "")
 """The sender from which the email will appear to be sent by. Must be verified in Amazon SES dashboard"""
 
-# If your account is still in the sandbox, this address must be verified.
 RECIPIENT: str = getenv("SGB_AWS_SES_RECIPIENT", "")
 """The recipient of the email. If your account is still in the AWS SES sandbox, the recipient must also verify his email"""
 
-AWS_REGION = getenv("SGB_AWS_REGION", "")
+AWS_REGION: str = getenv("SGB_AWS_REGION", "")
 """The AWS region where the SES resource will be hosted"""
 
-SUBJECT = "SGBs you can consider buying"
-"""Email subject"""
+SUBJECT: str = "SGBs you can consider buying"
+"""Subject of the email"""
 
-CHARSET = "UTF-8"
+CHARSET: str = "UTF-8"
 """The character encoding for the email."""
 
 

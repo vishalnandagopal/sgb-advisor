@@ -38,6 +38,7 @@ def calculate_sgb_xirr(sgb: SGB, current_gold_price: float) -> float:
     )
 
     for year, month in zip(
+        # Iterating over the years and months of the interest payment dates
         range(today.year, maturity.year + 1),
         [other_interest_payment_month, maturity.month]
         * (maturity.year - today.year + 1),
@@ -47,7 +48,8 @@ def calculate_sgb_xirr(sgb: SGB, current_gold_price: float) -> float:
         else:
             day = monthrange(year, month)[1]
         _date_to_check = datetime(year, month, day).date()
-        if today < _date_to_check < maturity:
+        # Final interest is paid on maturity, so checking <= for maturity
+        if today < _date_to_check <= maturity:
             payment_dates.append(_date_to_check)
 
     amounts = [sgb.issue_price * sgb.interest_rate / 100] * len(payment_dates)
