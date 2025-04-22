@@ -1,13 +1,15 @@
 from csv import reader as csv_reader
 from datetime import datetime
 from functools import lru_cache
+from os import getenv
 from os.path import dirname
 from typing import Optional
 
+from playwright.sync_api import ElementHandle
 from playwright.sync_api import TimeoutError as PlaywrightTimeoutError
 from playwright.sync_api import sync_playwright
 
-from .logger import log_level, logger
+from .logger import logger
 from .models import SGB
 from .quick_mafs import calculate_sgb_xirr
 
@@ -58,6 +60,34 @@ def read_scrips_file() -> list[list[str]]:
         return list(csv_contents)
 
 
+@lru_cache(maxsize=None)
+def run_in_headless_mode() -> bool:
+    """
+    Returns whether the script should run in headless mode or not. Uses the SGB_HEADLESS_MODE environment variable to determine this.
+
+    Parameters
+    ----------
+    None
+
+    Returns
+    -------
+    bool
+        True if the script should run in headless mode, False otherwise. Defaults to True.
+
+    Examples
+    --------
+    >>> run_in_headless_mode()
+    True
+    """
+    headless_mode = getenv("SGB_HEADLESS_MODE", "true").casefold() != "false"
+    logger.debug(
+        "Running playwright in headless mode"
+        if {headless_mode}
+        else "Running playwright in headed mode"
+    )
+    return headless_mode
+
+
 def get_sgbs_from_nse_site(n_th: Optional[int] = 1) -> list[SGB]:
     """
     Fetch info for SGBs located at NSE_SGB_URL. Uses the [playwright](https://playwright.dev/python/) library.
@@ -79,7 +109,7 @@ def get_sgbs_from_nse_site(n_th: Optional[int] = 1) -> list[SGB]:
     """
     with sync_playwright() as p:
         # Was firefox before, but NSE website is very buggy with it
-        browser = p.firefox.launch(headless=(False if log_level == "DEBUG" else True))
+        browser = p.firefox.launch(headless=run_in_headless_mode())
         page = browser.new_page()
         current_user_agent: str = page.evaluate("navigator.userAgent")
         new_user_agent = current_user_agent.replace("Headless", "")
@@ -116,25 +146,31 @@ def get_sgbs_from_nse_site(n_th: Optional[int] = 1) -> list[SGB]:
 
         csv_contents = read_scrips_file()
 
-        for n, p, v in zip(sgb_name_results, sgb_ltp_results, sgb_volume_results):
+        name_element: ElementHandle
+        price_element: ElementHandle
+        volume_element: ElementHandle
+
+        for name_element, price_element, volume_element in zip(
+            sgb_name_results, sgb_ltp_results, sgb_volume_results
+        ):
             try:
-                name = n.text_content()
-                p_str = p.text_content()
-                v_str = v.text_content()
+                name = name_element.text_content()
+                price_str = price_element.text_content()
+                volume_str = volume_element.text_content()
                 if not (
                     (name and name.startswith("SGB"))
-                    and (p_str)
-                    and (v_str and v_str != "-")
+                    and (price_str)
+                    and (volume_str and volume_str != "-")
                 ):
                     continue
 
                 row = list(filter(lambda x: x[0].strip() == name, csv_contents))[0]
                 _issue_date = list(map(int, row[4].split("/")))
-                if int(v_str.replace(",", "")) > 0:
+                if int(volume_str.replace(",", "")) > 0:
                     sgbs_trading.append(
                         SGB(
                             row[0],
-                            float(p_str.replace(",", "")),
+                            float(price_str.replace(",", "")),
                             float(row[5]),
                             float(row[2].replace("%", "").strip()),
                             datetime(
@@ -144,13 +180,14 @@ def get_sgbs_from_nse_site(n_th: Optional[int] = 1) -> list[SGB]:
                     )
 
             except Exception as e:
-                print(f'Couldn\'t add "{name}" to sgb_values - {e}')
+                print(
+                    f'Couldn\'t add "{name_element.text_content()}" to sgb_values - {e}'
+                )
 
         browser.close()
 
-    logger.info(
-        f'fetched all SGB data from NSE website. Sample data - "{sgbs_trading[0]}"'
-    )
+    logger.info("fetched all SGB data from NSE website")
+    logger.debug('sample SGB data from NSE- "{sgbs_trading[0]}"')
     return sgbs_trading
 
 
@@ -219,7 +256,7 @@ def fetch_price_of_gold_from_ibja(n_th: Optional[int] = 1) -> float:
     7956.00
     """
     with sync_playwright() as p:
-        browser = p.firefox.launch(headless=(False if log_level == "DEBUG" else True))
+        browser = p.firefox.launch(headless=run_in_headless_mode())
         page = browser.new_page(java_script_enabled=False)
 
         logger.info(f"fetching IBJA page at {IBJA_URL} - {n_th} time")

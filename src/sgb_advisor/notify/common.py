@@ -14,6 +14,9 @@ from ..data import get_price_of_gold
 from ..logger import logger
 from ..models import SGB
 
+tmp_folder = Path(f"{gettempdir()}/sgb_advisor")
+tmp_folder.mkdir(parents=True, exist_ok=True)
+
 
 def get_temp_file_path(file_extension: Optional[str] = "html") -> Path:
     """
@@ -34,8 +37,6 @@ def get_temp_file_path(file_extension: Optional[str] = "html") -> Path:
     >>> get_temp_file_path()
     Path("E:/Code/sgb_advisor/tmp/sgb_advisor/1730403483.2583637-9432.html")
     """
-    tmp_folder = Path(f"{gettempdir()}/sgb_advisor")
-    tmp_folder.mkdir(parents=True, exist_ok=True)
 
     file_name = f"{datetime.now().date()} SGB Advisor Output {randint(10000, 99999)}.{file_extension}"
 
@@ -179,7 +180,13 @@ def write_html_output(sgbs: list[SGB]) -> Path:
 
     Examples
     --------
-    >>> write_html_output([SGB1, SGB2, SGB3])
+    >>> write_html_output(
+    ...     [
+    ...         SGB1,
+    ...         SGB2,
+    ...         SGB3,
+    ...     ]
+    ... )
     Path("E:/Code/sgb_advisor/tmp/sgb_advisor/1730403483.2583637-9432.html")
     """
     html = generate_html_from_template(sgbs)

@@ -16,7 +16,8 @@ from ..logger import logger
 from ..models import SGB
 from .common import get_ist_time, get_temp_file_path, write_html_output
 
-TELEGRAM_BOT_TOKEN = getenv("SGB_TELEGRAM_BOT_TOKEN", "")
+TELEGRAM_BOT_TOKEN_ENV = "SGB_TELEGRAM_BOT_TOKEN"
+TELEGRAM_BOT_TOKEN = getenv(TELEGRAM_BOT_TOKEN_ENV, "")
 """Telegram bot token. Get it from [BotFather](https://t.me/BotFather) on Telegram"""
 
 
@@ -51,7 +52,7 @@ def test_bot_status() -> bool:
     response = json_loads(r_get(f"{API_URL}/{API_METHOD}").text)
 
     if response["ok"]:
-        logger.info(
+        logger.debug(
             f'telegram bot is be authenticated and running at "@{response["result"]["username"]}"'
         )
         return True
@@ -78,7 +79,11 @@ def check_chat_ids(chat_ids: list[str] = TELEGRAM_CHAT_IDS) -> bool:
 
     Examples
     --------
-    >>> check_chat_ids([1234567,])
+    >>> check_chat_ids(
+    ...     [
+    ...         1234567,
+    ...     ]
+    ... )
     True
     """
     API_METHOD = "getChat"
@@ -94,7 +99,7 @@ def check_chat_ids(chat_ids: list[str] = TELEGRAM_CHAT_IDS) -> bool:
                 f"could not find chat corresponding to chat_id - {chat_id}. Error - {response['description']}"
             )
         else:
-            logger.info(
+            logger.debug(
                 f'chat ID is valid and corresponds to username "@{response["result"]["username"]}".'
             )
 
@@ -125,7 +130,7 @@ def validate_telegram_envs() -> bool:
 def create_and_send_message(
     sgbs: list[SGB],
     chat_ids: list[str] = TELEGRAM_CHAT_IDS,
-) -> bool:
+) -> None:
     """
     Creates a message with the given SGB list and sends it on Telegram
 
@@ -138,17 +143,22 @@ def create_and_send_message(
 
     Returns
     -------
-    bool : True if successful
+    None
 
     Examples
     --------
-    >>> create_and_send_message(sgbs, [123456789,])
-    True
+    >>> create_and_send_message(
+    ...     sgbs,
+    ...     [
+    ...         123456789,
+    ...     ],
+    ... )
+    None
     """
 
     photo_path: Path = generate_screenshot_of_html(sgbs)
     caption: str = get_telegram_caption(sgbs)
-    return send_message_with_files(
+    send_message_with_files(
         files=[photo_path, get_json_file(sgbs)],
         photo_captions=[caption, ""],
         chat_ids=chat_ids,
@@ -169,13 +179,15 @@ def send_message(message_content: str, chat_ids: list[str] = TELEGRAM_CHAT_IDS) 
 
     Returns
     -------
-    bool
-        True if the message was successfully sent to all chat IDs
+    None
 
     Examples
     --------
-    >>> send_telegram_message("test", 123456789)
-    True
+    >>> send_telegram_message(
+    ...     "test",
+    ...     123456789,
+    ... )
+    None
     """
 
     API_METHOD = "sendMessage"
@@ -197,10 +209,14 @@ def send_message(message_content: str, chat_ids: list[str] = TELEGRAM_CHAT_IDS) 
             success = False
 
         else:
-            logger.info(
+            logger.debug(
                 f"succesfully sent message to @{response['result']['chat']['username']} with message_id {response['result']['message_id']}"
             )
 
+    if not success:
+        logger.warning("could not send message to all chat IDs")
+    else:
+        logger.info(f"message sent to all chat IDs: {', '.join(chat_ids)}")
     return success
 
 
@@ -208,7 +224,7 @@ def send_message_with_files(
     files: list[Path],
     photo_captions: list[str] | str,
     chat_ids: list[str] = TELEGRAM_CHAT_IDS,
-) -> bool:
+) -> None:
     """
     Sends a message with a photo on Telegram
 
@@ -224,12 +240,16 @@ def send_message_with_files(
 
     Returns
     -------
-    bool : True if successful
+    None
 
     Examples
     --------
-    >>> send_message_with_photo(sgbs, "telegram.png", 123456789)
-    True
+    >>> send_message_with_photo(
+    ...     sgbs,
+    ...     "telegram.png",
+    ...     123456789,
+    ... )
+    None
     """
 
     # Sending as document to preserve quality
@@ -293,13 +313,16 @@ def send_message_with_files(
                 success = False
 
             else:
-                logger.info(
+                logger.debug(
                     f"succesfully sent message to @{response['result']['chat']['username']} with message_id {response['result']['message_id']}"
                 )
                 if not file_id:
                     file_id = response["result"]["document"]["file_id"]
 
-    return success
+    if not success:
+        logger.warning("could not send message to all chat IDs")
+    else:
+        logger.info("message sent to all chat IDs")
 
 
 def generate_screenshot_of_html(sgbs: list[SGB]) -> Path:
@@ -329,7 +352,7 @@ def generate_screenshot_of_html(sgbs: list[SGB]) -> Path:
         page = browser.new_page()
         page.goto(f"file://{html_file_path}")
 
-        logger.info(f"taking screenshot of html file at {html_file_path}")
+        logger.debug(f"taking screenshot of html file at {html_file_path}")
 
         photo_path = get_temp_file_path("png")
 

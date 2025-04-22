@@ -4,6 +4,8 @@ permissions:
   contents: read
   packages: write
 on:
+  schedule:
+    - cron: "30 10 10 10/6 *"
   push:
     branches:
       - master
@@ -12,10 +14,8 @@ on:
       - "src/"
       - ".dockerignore"
       - "Dockerfile"
-      - ".github/workflows/create-docker-image.yaml"
-      - ".python-version"
+      - ".github/workflows/create-docker-image.yml"
       - "requirements.txt"
-      - "pyproject.toml"
   workflow_dispatch:
 
 jobs:
@@ -48,8 +48,7 @@ jobs:
 
           docker buildx build \
           --label "org.opencontainers.image.created=${DOCKER_BUILD_TIME}" \
-          --label "org.opencontainers.image.version=${DOCKER_BUILD_GIT_COMMIT}" \
-          --label "org.opencontainers.image.source=${GITHUB_REPOSITORY_URL}" \
+          --label "org.opencontainers.image.revision=${DOCKER_BUILD_GIT_COMMIT}" \
           --tag "ghcr.io/${GITHUB_REPOSITORY}:latest" \
           --tag "ghcr.io/${GITHUB_REPOSITORY}:${DOCKER_BUILD_SHORT_GIT_COMMIT}" \
           --tag "ghcr.io/${GITHUB_REPOSITORY}:${DOCKER_BUILD_GIT_COMMIT}" \

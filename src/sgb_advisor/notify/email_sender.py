@@ -11,7 +11,8 @@ from ..data import SGB
 from ..logger import logger
 from .common import generate_html_from_template
 
-AWS_ACCESS_KEY: str = getenv("SGB_AWS_ACCESS_KEY", "")
+AWS_ACCESS_KEY_ENV: str = "SGB_AWS_ACCESS_KEY"
+AWS_ACCESS_KEY: str = getenv(AWS_ACCESS_KEY_ENV, "")
 """AWS access key from the AWS console. Try to create one for a non-root user"""
 
 AWS_SECRET_ACCESS_KEY: str = getenv("SGB_AWS_SECRET_ACCESS_KEY", "")

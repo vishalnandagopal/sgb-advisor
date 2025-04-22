@@ -10,8 +10,9 @@ on:
       - master
     paths-ignore:
       - "Dockerfile"
-      - ".github/workflows/create-docker-image.yaml"
-      - ".github/workflows/codeql.yaml"
+      - ".github/workflows/create-docker-image.yml"
+      - ".github/workflows/codeql.yml"
+      - ".github/dependabot.yml"
       - ".dockerignore"
       - "README.md"
   workflow_dispatch:

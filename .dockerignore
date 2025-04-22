@@ -4,6 +4,7 @@ testing.py
 test.py
 *.log
 .python-version
+pyproject.toml
 
 .git
 .github

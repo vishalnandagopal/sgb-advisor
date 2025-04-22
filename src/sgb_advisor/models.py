@@ -43,7 +43,12 @@ class SGB:
 
         Examples
         --------
-        >>> SGB("SGBSEP27",7900.02,5400,datetime.date(2020,9,1))
+        >>> SGB(
+        ...     "SGBSEP27",
+        ...     7900.02,
+        ...     5400,
+        ...     datetime.date(2020, 9, 1),
+        ... )
         SGB_Object
 
 

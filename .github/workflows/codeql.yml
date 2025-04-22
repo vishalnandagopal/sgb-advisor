@@ -20,7 +20,7 @@ on:
       - "pyproject.toml"
       - ".python-version"
       - "requirements.txt"
-      - ".github/workflows/codeql.yaml"
+      - ".github/workflows/codeql.yml"
   pull_request:
     branches: ["master"]
   workflow_dispatch:

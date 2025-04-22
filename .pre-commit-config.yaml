@@ -10,24 +10,26 @@ repos:
       - id: check-symlinks
   - repo: https://github.com/astral-sh/uv-pre-commit
     # uv version.
-    rev: 0.6.14
+    rev: 0.7.3
     hooks:
       # Update the uv lockfile
       - id: uv-lock
       - id: uv-export
-        # uv export --no-dev --format requirements-txt --no-emit-project -o requirements.txt
+        # uv export --no-group dev --quiet --no-emit-project --format requirements-txt --output-file requirements.txt
         args:
           [
-            "--no-dev",
+            "--no-group",
+            "dev",
+            "--quiet",
+            "--no-emit-project",
             "--format",
             "requirements-txt",
-            "--no-emit-project",
-            "-o",
+            "--output-file",
             "requirements.txt",
           ]
   - repo: https://github.com/astral-sh/ruff-pre-commit
     # Ruff version.
-    rev: v0.11.6
+    rev: v0.11.9
     hooks:
       # Run the linter.
       - id: ruff

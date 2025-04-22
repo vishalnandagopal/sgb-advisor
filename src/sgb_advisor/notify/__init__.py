@@ -2,9 +2,19 @@ from os import getenv
 
 from ..logger import logger
 from ..models import SGB
-from .common import write_html_output as write_html_output
-from .email_sender import send_mail as send_mail
-from .teleg import create_and_send_message, validate_telegram_envs
+from .common import tmp_folder
+from .email_sender import AWS_ACCESS_KEY_ENV, send_mail
+from .teleg import (
+    TELEGRAM_BOT_TOKEN_ENV,
+    create_and_send_message,
+    validate_telegram_envs,
+)
+
+SGB_MODE_ENV: str = "SGB_MODE"
+TELEGRAM_MODE: str = "telegram"
+EMAIL_MODE: str = "email"
+BOTH_MODE: str = "both"
+NONE_MODE: str = "none"
 
 
 def notify(sgbs: list[SGB]) -> None:
@@ -22,17 +32,28 @@ def notify(sgbs: list[SGB]) -> None:
     Examples
     --------
     >>> notify(sgbs)
-    True
+    None
     """
 
     MODE_OF_OPERATION: set[str] = guess_mode_of_notification()
 
-    if "telegram" in MODE_OF_OPERATION:
-        if not validate_telegram_envs() or not create_and_send_message(sgbs):
-            logger.error("could not send message via telegram")
-    if "email" in MODE_OF_OPERATION:
+    if NONE_MODE in MODE_OF_OPERATION:
+        logger.info(
+            f'not sending any notifications since mode is set to {NONE_MODE}. Output will only be written to the folder "{tmp_folder}".'
+        )
+        return
+
+    if TELEGRAM_MODE in MODE_OF_OPERATION:
+        if not validate_telegram_envs():
+            err = "could not send message via telegram"
+            logger.error(err)
+            raise RuntimeError(err)
+        create_and_send_message(sgbs)
+    if EMAIL_MODE in MODE_OF_OPERATION:
         if not send_mail(sgbs):
-            logger.error("could not send email")
+            err = "could not send email via AWS SES"
+            logger.error(err)
+            raise RuntimeError(err)
 
 
 def guess_mode_of_notification() -> set[str]:
@@ -46,7 +67,7 @@ def guess_mode_of_notification() -> set[str]:
     Returns
     -------
     set[str]
-        The channel(s) to which the notify the user through
+        The mode(s) to which the notify the user through
 
     Examples
     --------
@@ -54,27 +75,28 @@ def guess_mode_of_notification() -> set[str]:
     {"telegram", "email"}
     """
 
-    mode: set[str] = {getenv("SGB_MODE", "").casefold()}
+    mode: set[str] = set(getenv(SGB_MODE_ENV, "").casefold().split(","))
 
-    if "both" in mode:
-        mode = {"email", "telegram"}
-
-    if "" in mode:
-        mode.remove("")
+    if NONE_MODE in mode:
+        mode = {NONE_MODE}
+    elif BOTH_MODE in mode:
+        mode = {EMAIL_MODE, TELEGRAM_MODE}
+    elif mode == {""}:
+        mode = set()
         # Guessing mode(s) by looking at which env variables are set
-        if getenv("SGB_TELEGRAM_BOT_TOKEN"):
-            mode.add("telegram")
-        if getenv("SGB_AWS_ACCESS_KEY"):
-            mode.add("email")
+        if getenv(TELEGRAM_BOT_TOKEN_ENV):
+            mode.add(TELEGRAM_MODE)
+        if getenv(AWS_ACCESS_KEY_ENV):
+            mode.add(EMAIL_MODE)
+    elif EMAIL_MODE not in mode and TELEGRAM_MODE not in mode:
+        mode = set()
 
     if not mode:
-        msg: str = f"""could not guess mode of operation. It is currently {
-            f"set as {mode}" if "" not in mode and len(mode) >= 1 else "not set"
-        }. Output will only be written to file and not sent anywhere."""
+        msg: str = f"could not guess mode of operation. ENV {SGB_MODE_ENV} is set as {getenv(SGB_MODE_ENV)}"
 
         logger.error(msg)
         raise RuntimeError(msg)
 
-    logger.info(f"Mode is current set to {mode}")
+    logger.info(f"SGB mode is current set to {mode}")
 
     return mode
