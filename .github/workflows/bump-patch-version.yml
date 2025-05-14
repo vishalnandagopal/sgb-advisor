@@ -1,0 +1,28 @@
+---
+name: Bump patch version
+permissions:
+  contents: read
+on:
+  schedule:
+    - cron: "30 10 20 11/6 *" # 20th of every November and May at 10:30 UTC
+  workflow_dispatch:
+
+jobs:
+  bump-patch-version:
+    runs-on: Checkout the repo ⬇️
+    permissions:
+      contents: write
+    steps:
+      - name: Checkout the repo
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+
+      - name: Bump patch version 🔧
+        run: |
+          # If triggered by schedule, bump the patch version to not conflict with the tag version
+          # and to ensure that the version is always incremented.
+          uv version --bump patch
+          export SGB_ADVISOR_BUMPED_RELEASE_VERSION="v`uv version --short`"
+          git tag -a -m "Bumped version to ${SGB_ADVISOR_BUMPED_RELEASE_VERSION} "${SGB_ADVISOR_BUMPED_RELEASE_VERSION}"
+          git push origin tag "${SGB_ADVISOR_BUMPED_RELEASE_VERSION}"
