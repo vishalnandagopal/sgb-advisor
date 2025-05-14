@@ -52,6 +52,4 @@ jobs:
 
           docker image ls --all
 
-          docker push "ghcr.io/${GITHUB_REPOSITORY}:latest"
-          docker image rm -f "ghcr.io/${GITHUB_REPOSITORY}:latest"
-          docker push --all-tags "ghcr.io/${GITHUB_REPOSITORY}:${SGB_ADVISOR_RELEASE_VERSION}"
+          docker push --all-tags "ghcr.io/${GITHUB_REPOSITORY}"

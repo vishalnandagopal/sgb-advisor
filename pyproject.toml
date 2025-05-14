@@ -1,6 +1,6 @@
 [project]
 name = "sgb-advisor"
-version = "0.1.2"
+version = "0.1.3"
 description = "A tool to analyse Sovereign Gold Bonds and compare their yields."
 readme = "README.md"
 authors = [
