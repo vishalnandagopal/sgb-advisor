@@ -1,34 +1,35 @@
 ---
 name: SGB Advisor
 permissions:
-  contents: read
+  contents: none
 on:
-  schedule:
-    - cron: "30 4 * * 1-5"
   push:
     branches:
       - master
-    paths-ignore:
-      - "Dockerfile"
-      - ".github/workflows/create-docker-image.yml"
-      - ".github/workflows/codeql.yml"
-      - ".github/dependabot.yml"
-      - ".dockerignore"
-      - "README.md"
+    paths:
+      - ".github/workflows/sgb_advisor.yml"
+      - "**.py"
+      - "src/"
+      - "requirements.txt"
+      - ".python-version"
+  # schedule:
+  #   - cron: "30 4 * * 1-5" # Disabled till NSE allows foreign IPs again
   workflow_dispatch:
 
 jobs:
   run-sgb-advisor:
+    permissions:
+      contents: read
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout the repo
+      - name: Checkout the repo ⬇️
         uses: actions/checkout@v4
         with:
           fetch-depth: 1
-      - name: Setup python and pip
+      - name: Setup python and pip 🐍
         uses: actions/setup-python@v5
         with:
-          python-version: "3.13"
+          python-version-file: ".python-version"
           cache: "pip" # caching pip dependencies
       - name: Install requirements
         run: |
@@ -43,7 +44,7 @@ jobs:
       - name: Setup and install playwright
         run: |
           playwright install --with-deps firefox
-      - name: Run the script
+      - name: Run the script 🪙
         env:
           SGB_AWS_ACCESS_KEY: ${{ secrets.SGB_AWS_ACCESS_KEY }}
           SGB_AWS_SECRET_ACCESS_KEY: ${{ secrets.SGB_AWS_SECRET_ACCESS_KEY }}
@@ -54,4 +55,4 @@ jobs:
           SGB_AWS_REGION: ${{ vars.SGB_AWS_REGION }}
           SGB_MODE: ${{ vars.SGB_MODE }}
           SGB_LOG_LEVEL: ${{ vars.SGB_LOG_LEVEL }}
-        run: python3 app.py
+        run: python3 -B app.py
