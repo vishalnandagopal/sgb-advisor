@@ -34,7 +34,7 @@ jobs:
           GITHUB_SERVER_URL: ${{ vars.GITHUB_SERVER_URL }}
           GITHUB_EVENT_NAME: ${{ vars.GITHUB_EVENT_NAME }}
         run: |
-          export SGB_ADVISOR_RELEASE_VERSION=`uv version --short`
+          export SGB_ADVISOR_RELEASE_VERSION="`git describe --tags $(git rev-list --tags --max-count=1)`"
           export GITHUB_REPOSITORY_URL="${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}"
           export DOCKER_BUILD_GIT_COMMIT=`git rev-parse HEAD`
           export DOCKER_BUILD_SHORT_GIT_COMMIT=`git rev-parse --short HEAD`
