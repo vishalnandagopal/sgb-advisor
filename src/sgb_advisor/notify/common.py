@@ -11,7 +11,7 @@ from tempfile import gettempdir
 from typing import Optional
 
 from ..data import get_price_of_gold
-from ..logger import logger
+from ..logg import logger
 from ..models import SGB
 
 tmp_folder = Path(f"{gettempdir()}/sgb_advisor")

@@ -37,7 +37,7 @@ jobs:
 
       - name: Install dependencies ⬇️ 📦
         run: |
-          uv sync --no-default-groups --locked
+          uv sync --no-default-groups --frozen
 
       - name: Build package 👷‍♂️
         run: |

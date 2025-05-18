@@ -4,7 +4,7 @@ permissions:
   contents: none
 on:
   schedule:
-    - cron: "30 10 20 11/6 *" # 20th of every November and May at 10:30 UTC
+    - cron: "30 10 20 11/5 *" # 20th of every November and May at 10:30 UTC
   workflow_dispatch:
 
 jobs:
@@ -12,22 +12,59 @@ jobs:
     name: Bump project version
     runs-on: ubuntu-latest
     permissions:
-      contents: read
+      contents: write
     steps:
       - name: Checkout the repo ⬇️
         uses: actions/checkout@v4
         with:
-          fetch-depth: 1
+          fetch-depth: 0 # actions/checkout#1471
+          fetch-tags: true
+
+      - name: Setup uv ⛏️
+        uses: astral-sh/setup-uv@6b9c6063abd6010835644d4c2e1bef4cf5cd0fca
 
       - name: Bump patch version 🔧
         run: |
-          # If triggered by schedule, bump the patch version to not conflict with the tag version
-          # and to ensure that the version is always incremented.
-          uv version --bump patch
-          export SGB_ADVISOR_BUMPED_RELEASE_VERSION="v`uv version --short`"
-          if [[ ${SGB_ADVISOR_BUMPED_RELEASE_VERSION} == "v" ]]; then
-            echo "Exiting because the version is not set properly"
+          export SGB_ADVISOR_CURRENT_RELEASE_VERSION="v`uv version --short`"
+
+          echo "> echo \${SGB_ADVISOR_CURRENT_RELEASE_VERSION}"
+          echo "${SGB_ADVISOR_CURRENT_RELEASE_VERSION}"
+
+          if [[ ${SGB_ADVISOR_CURRENT_RELEASE_VERSION} == "v" ]]; then
+            echo "Current version ('${SGB_ADVISOR_CURRENT_RELEASE_VERSION}') could not be properly determined."
             exit 1
           fi
-          git tag -a -m "Bumped version to ${SGB_ADVISOR_BUMPED_RELEASE_VERSION} "${SGB_ADVISOR_BUMPED_RELEASE_VERSION}"
+
+          echo "> git tag"
+          git tag
+          echo "> git tag | tail -1"
+          git tag | tail -1
+
+          if [[ ${SGB_ADVISOR_CURRENT_RELEASE_VERSION} != "`git tag | tail -1`" ]]; then
+            echo "Current version ('${SGB_ADVISOR_CURRENT_RELEASE_VERSION}') has not been tagged yet. Skipping the version bump."
+            exit 0
+          fi
+
+          # Bump patch version
+          uv version --bump patch
+          uv lock --upgrade
+          uv export --no-group dev --quiet --no-emit-project --format requirements-txt --output-file requirements.txt
+
+          export SGB_ADVISOR_BUMPED_RELEASE_VERSION="v`uv version --short`"
+
+          echo "> echo \${SGB_ADVISOR_BUMPED_RELEASE_VERSION}"
+          echo "${SGB_ADVISOR_BUMPED_RELEASE_VERSION}"
+
+          if [[ ${SGB_ADVISOR_BUMPED_RELEASE_VERSION} == "v" ]]; then
+            echo "Exiting because '${SGB_ADVISOR_BUMPED_RELEASE_VERSION}' is not a valid release version."
+            exit 1
+          fi
+
+          # Tag and push the new version
+          git config user.name github-actions
+          git config user.email github-actions@github.com
+          git add . -v pyproject.toml uv.lock requirements.txt
+          git commit -m "Bump patch version to ${SGB_ADVISOR_BUMPED_RELEASE_VERSION}"
+          git push origin master
+          git tag -a -m "Bumped version to ${SGB_ADVISOR_BUMPED_RELEASE_VERSION}" "${SGB_ADVISOR_BUMPED_RELEASE_VERSION}"
           git push origin tag "${SGB_ADVISOR_BUMPED_RELEASE_VERSION}"

@@ -3,7 +3,7 @@ from datetime import date, datetime
 
 from pyxirr import xirr
 
-from .logger import logger
+from .logg import logger
 from .models import SGB
 
 
@@ -21,7 +21,7 @@ def calculate_sgb_xirr(sgb: SGB, current_gold_price: float) -> float:
     Returns
     -------
     float
-        Returns the calculated XIRR in percentage terms
+        Returns the calculated XIRR in percentage terms, rounded to 3 digits
 
     Examples
     --------
@@ -69,6 +69,9 @@ def calculate_sgb_xirr(sgb: SGB, current_gold_price: float) -> float:
 
     if not x:
         logger.error(f"couldn't calculate XIRR for {sgb.nse_symbol}")
+        logger.debug(
+            f"Dump for {sgb.nse_symbol}:-\npayment_dates : {payment_dates}\namounts : {amounts}"
+        )
         return 0
 
     return round(x * 100, 3)
