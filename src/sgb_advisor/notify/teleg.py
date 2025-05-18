@@ -12,7 +12,7 @@ from requests import get as r_get
 from requests import post as r_post
 
 from ..data import get_price_of_gold
-from ..logger import logger
+from ..logg import logger
 from ..models import SGB
 from .common import get_ist_time, get_temp_file_path, write_html_output
 
@@ -21,7 +21,7 @@ TELEGRAM_BOT_TOKEN = getenv(TELEGRAM_BOT_TOKEN_ENV, "")
 """Telegram bot token. Get it from [BotFather](https://t.me/BotFather) on Telegram"""
 
 
-TELEGRAM_CHAT_IDS: list[str] = getenv("SGB_TELEGRAM_CHAT_IDS", "0").split(",")
+TELEGRAM_CHAT_IDS: list[str] = getenv("SGB_TELEGRAM_CHAT_IDS", "").split(",")
 """Unique identifier for the target chat or username of the target channel (in the format @channelusername)"""
 
 
@@ -100,7 +100,7 @@ def check_chat_ids(chat_ids: list[str] = TELEGRAM_CHAT_IDS) -> bool:
             )
         else:
             logger.debug(
-                f'chat ID is valid and corresponds to username "@{response["result"]["username"]}".'
+                f'chat ID {chat_id} is valid and corresponds to username "@{response["result"]["username"]}".'
             )
 
     return success
@@ -124,7 +124,7 @@ def validate_telegram_envs() -> bool:
     >>> validate_telegram_envs()
     True
     """
-    return all((test_bot_status(), check_chat_ids()))
+    return test_bot_status() and check_chat_ids()
 
 
 def create_and_send_message(
