@@ -1,7 +1,7 @@
 ---
-name: Bump patch version
+name: Bump project version
 permissions:
-  contents: read
+  contents: none
 on:
   schedule:
     - cron: "30 10 20 11/6 *" # 20th of every November and May at 10:30 UTC
@@ -9,11 +9,12 @@ on:
 
 jobs:
   bump-patch-version:
-    runs-on: Checkout the repo ⬇️
+    name: Bump project version
+    runs-on: ubuntu-latest
     permissions:
-      contents: write
+      contents: read
     steps:
-      - name: Checkout the repo
+      - name: Checkout the repo ⬇️
         uses: actions/checkout@v4
         with:
           fetch-depth: 1
@@ -24,5 +25,9 @@ jobs:
           # and to ensure that the version is always incremented.
           uv version --bump patch
           export SGB_ADVISOR_BUMPED_RELEASE_VERSION="v`uv version --short`"
+          if [[ ${SGB_ADVISOR_BUMPED_RELEASE_VERSION} == "v" ]]; then
+            echo "Exiting because the version is not set properly"
+            exit 1
+          fi
           git tag -a -m "Bumped version to ${SGB_ADVISOR_BUMPED_RELEASE_VERSION} "${SGB_ADVISOR_BUMPED_RELEASE_VERSION}"
           git push origin tag "${SGB_ADVISOR_BUMPED_RELEASE_VERSION}"

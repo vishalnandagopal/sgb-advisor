@@ -6,9 +6,10 @@ load_dotenv(".env")
 
 def main():
     "Entry fuction for the script"
-    from src.sgb_advisor import main as main
+    from sgb_advisor import get_sgbs, notify
 
-    main()
+    sgbs = get_sgbs()
+    notify(sgbs)
 
 
 if __name__ == "__main__":

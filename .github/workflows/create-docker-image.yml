@@ -1,7 +1,7 @@
 ---
 name: Create docker image
 permissions:
-  contents: read
+  contents: none
 on:
   push:
     tags: ["v*.*.*"]
