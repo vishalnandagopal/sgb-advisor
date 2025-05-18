@@ -9,7 +9,7 @@ from playwright.sync_api import ElementHandle
 from playwright.sync_api import TimeoutError as PlaywrightTimeoutError
 from playwright.sync_api import sync_playwright
 
-from .logger import logger
+from .logg import logger
 from .models import SGB
 from .quick_mafs import calculate_sgb_xirr
 

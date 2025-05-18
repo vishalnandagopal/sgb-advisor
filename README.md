@@ -8,7 +8,7 @@ This tool tries to use publically available data and ✨maths✨ to advise you o
 
 **This does not recommend anything. Calculations, data or something else can be wrong. Do your own research before investing your money anywhere.**
 
-**Demo**: Output will being sent in [this](https://t.me/sgb_advisor) public Telegram channel at 10:00 AM IST every weekday!
+~~**Demo**: Output is being sent in [this](https://t.me/sgb_advisor) public Telegram channel at ~10:00 AM IST every weekday!~~
 
 ## Tools used:
 
@@ -26,14 +26,14 @@ You can use any of the 3 methods given below
     # Highly recommend creating a venv using `python -m venv .venv` and then activating it (https://docs.python.org/3/library/venv.html#how-venvs-work) first.
     pip install sgb-advisor
     playwright install --with-deps firefox
-    # Setup env before this
+    # Setup .env in same folder
     sgb-advisor
     ```
 
 2. Docker
 
     ```sh
-    # Setup env before this
+    # Setup .env in same folder
     docker run --env-file .env ghcr.io/vishalnandagopal/sgb-advisor:latest
     ```
 
@@ -51,6 +51,7 @@ Place the required env variables in an [`.env`](.env) file.
 ```env
 # How to notify the user. Accepted values are "telegram", "email" or "both"
 SGB_MODE=telegram
+SGB_LOG_LEVEL=info
 
 # Get token from BotFather on Telegram
 SGB_TELEGRAM_BOT_TOKEN=xxxxxxxxxx:xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
