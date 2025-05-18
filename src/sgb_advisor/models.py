@@ -69,7 +69,7 @@ class SGB:
         """The date of maturity of the bond"""
 
         self.xirr: float = 0
-        """XIRR which will be calculated and set later"""
+        """XIRR which can be calculated and set later"""
 
     def __str__(self) -> str:
         """

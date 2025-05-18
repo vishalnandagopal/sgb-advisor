@@ -24,9 +24,9 @@ LABEL \
     org.opencontainers.image.title="SGB Advisor" \
     org.opencontainers.image.authors="Vishal Nandagopal (dev@vishalnandagopal.com)" \
     org.opencontainers.image.description="A tool to analyse Sovereign Gold Bonds and compare their yields" \
-    org.opencontainers.image.source="https://github.com/vishalnandagopal/sgb-advisor.git" \
     org.opencontainers.image.url="https://github.com/vishalnandagopal/sgb-advisor" \
+    org.opencontainers.image.source="https://github.com/vishalnandagopal/sgb-advisor.git" \
     org.opencontainers.image.documentation="https://github.com/vishalnandagopal/sgb-advisor/blob/master/README.md#running-the-app" \
-    org.opencontainers.image.licenses="MIT"
+    org.opencontainers.image.licenses="GPL-3.0-only"
 
 ENTRYPOINT ["python3", "app.py"]

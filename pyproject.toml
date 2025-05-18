@@ -1,12 +1,10 @@
 [project]
 name = "sgb-advisor"
-version = "0.1.4"
+version = "0.1.7"
 description = "A tool to analyse Sovereign Gold Bonds and compare their yields."
 readme = "README.md"
-authors = [
-    {name = "Vishal Nandagopal", email="dev@vishalnandagopal.com"}
-]
-license= "GPL-3.0-only"
+authors = [{ name = "Vishal Nandagopal", email = "dev@vishalnandagopal.com" }]
+license = "GPL-3.0-only"
 requires-python = ">=3.13"
 dependencies = [
     "loguru>=0.7.3",
@@ -16,38 +14,45 @@ dependencies = [
     "boto3>=1.38.12",
     "playwright>=1.52.0",
 ]
+keywords = ["sovereign-gold-bonds", "sgb", "india-finance", "finance"]
 
-[tool.uv]
-dev-dependencies = [
+[dependency-groups]
+dev = [
     "boto3-stubs>=1.38.12",
     "icecream>=2.1.4",
     "mypy>=1.15.0",
     "pre-commit>=4.2.0",
-    "ruff>=0.11.9",
+    "ruff>=0.11.10",
+    "ty>=0.0.1a5",
     "types-requests>=2.32.0.20250328",
-    "uv>=0.7.3",
+    "uv>=0.7.5",
 ]
+build = ["hatch>=1.14.1"]
+
+[project.urls]
+homepage = "https://github.com/vishalnandagopal/sgb-advisor"
+source = "https://github.com/vishalnandagopal/sgb-advisor.git"
+documentation = "https://github.com/vishalnandagopal/sgb-advisor/blob/master/README.md#running-the-app"
+issues = "https://github.com/vishalnandagopal/sgb-advisor/issues"
+
+[project.scripts]
+sgb-advisor = "sgb_advisor.__main__:main"
+
+[tool.uv]
+default-groups = "all"
 
 [tool.ruff.format]
 docstring-code-format = true
 docstring-code-line-length = 100
 
-[dependency-groups]
-dev = [
-    "ty>=0.0.0a7",
-]
-
-[project.scripts]
-sgb-advisor = "sgb_advisor.__main__:main"
-
 [build-system]
-build-backend  = 'hatchling.build'
-requires       = ['hatchling']
+build-backend = 'hatchling.build'
+requires = ['hatchling']
 
 [tool.hatch.build.targets.sdist]
 include = [
-  "src/sgb_advisor/assets/scrips.csv",
-  "src/sgb_advisor/assets/template.html",
-  "src/sgb_advisor/assets/telegram_template.html",
-  "src/sgb_advisor/**/*.py"
+    "src/sgb_advisor/assets/scrips.csv",
+    "src/sgb_advisor/assets/template.html",
+    "src/sgb_advisor/assets/telegram_template.html",
+    "src/sgb_advisor/**/*.py",
 ]

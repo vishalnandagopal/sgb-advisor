@@ -1,3 +1,6 @@
+assets/sample_data.json
+sgb_advisor.log
+
 tmp/
 output/
 testing.py
@@ -5,6 +8,7 @@ test.py
 *.log
 .python-version
 pyproject.toml
+py.typed
 
 .git
 .github
@@ -13,7 +17,6 @@ Dockerfile
 .dockerignore
 uv.lock
 .pre-commit-config.yaml
-build-and-run.sh
 
 # python generated files
 __pycache__/

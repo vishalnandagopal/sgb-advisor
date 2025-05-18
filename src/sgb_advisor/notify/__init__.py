@@ -1,6 +1,6 @@
 from os import getenv
 
-from ..logger import logger
+from ..logg import logger
 from ..models import SGB
 from .common import tmp_folder
 from .email_sender import AWS_ACCESS_KEY_ENV, send_mail

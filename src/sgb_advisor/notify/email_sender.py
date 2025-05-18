@@ -8,7 +8,7 @@ from boto3 import client as aws_client
 from botocore.exceptions import ClientError
 
 from ..data import SGB
-from ..logger import logger
+from ..logg import logger
 from .common import generate_html_from_template
 
 AWS_ACCESS_KEY_ENV: str = "SGB_AWS_ACCESS_KEY"

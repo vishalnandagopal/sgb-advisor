@@ -4,7 +4,7 @@ from dotenv import load_dotenv
 load_dotenv(".env")
 
 
-def main():
+def main() -> None:
     "Entry fuction for the script"
     from src.sgb_advisor import main as main
 
