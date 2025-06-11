@@ -10,6 +10,8 @@ updates:
     schedule:
       interval: "cron"
       cronjob: "30 10 05 7/6 *"
-  - groups:
-      all:
+    groups:
+      version-update-group:
         applies-to: version-updates
+        patterns:
+          - "*" # Wildcard
