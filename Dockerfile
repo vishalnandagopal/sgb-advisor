@@ -3,8 +3,10 @@ ARG BASEIMAGE=docker.io/library/python:3.13-slim-bookworm
 
 FROM --platform=${IMAGE_PLATFORM} $BASEIMAGE AS final
 
-RUN apt-get update && \
-    apt-get upgrade -y
+RUN apt-get clean && \
+    apt-get update && \
+    apt-get upgrade --yes && \
+    apt-get autoremove --yes
 
 WORKDIR /sgb_advisor_runtime
 

@@ -9,7 +9,7 @@ repos:
       - id: check-merge-conflict
       - id: check-symlinks
   - repo: https://github.com/astral-sh/uv-pre-commit
-    rev: 0.7.12
+    rev: 0.7.19
     hooks:
       # Update the uv lockfile
       - id: uv-lock
@@ -26,10 +26,10 @@ repos:
             "requirements.txt",
           ]
   - repo: https://github.com/astral-sh/ruff-pre-commit
-    rev: v0.11.13
+    rev: v0.12.2
     hooks:
       # Run the linter.
-      - id: ruff
+      - id: ruff-check
         args: [--fix]
       # Run the formatter.
       - id: ruff-format
