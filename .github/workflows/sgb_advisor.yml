@@ -12,8 +12,8 @@ on:
       - "src/"
       - "requirements.txt"
       - ".python-version"
-  # schedule:
-  #   - cron: "30 4 * * 1-5" # Disabled till NSE allows foreign IPs again
+  schedule:
+    - cron: "30 4 * * 1-5"
   workflow_dispatch:
 
 jobs:
