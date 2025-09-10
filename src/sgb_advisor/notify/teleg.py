@@ -318,6 +318,8 @@ def send_message_with_files(
         elif file.suffix == ".json":
             file_mime_type = "application/json"
 
+        print(escape_tg_reserved_characters(caption))
+
         for chat_id in chat_ids:
             request_body = {
                 "caption": escape_tg_reserved_characters(caption),
