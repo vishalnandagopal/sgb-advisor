@@ -184,7 +184,26 @@ def escape_tg_reserved_characters(msg: str) -> str:
     >>> escape_tg_reserved_characters("my name is vishal.")
     \"my name is vishal\\.\"
     """
-    reserved_characters = {".", "-"}
+    reserved_characters = {
+        "_",
+        "*",
+        "[",
+        "]",
+        "(",
+        ")",
+        "~",
+        "`",
+        ">",
+        "#",
+        "+",
+        "-",
+        "=",
+        "|",
+        "{",
+        "}",
+        ".",
+        "!",
+    }
     for char in reserved_characters:
         msg = msg.replace(char, f"\\{char}")
     return msg
