@@ -165,6 +165,31 @@ def create_and_send_message(
     )
 
 
+def escape_tg_reserved_characters(msg: str) -> str:
+    """
+    Given a string, returns a safe variant of it suitable for sending on telegram. Replaces all reserved characters.
+
+    Parameters
+    ----------
+    msg : str
+        Message to replace reserved characters in
+
+    Returns
+    -------
+    str
+        A safe variant of the text with reserved characters replaced
+
+    Examples
+    --------
+    >>> escape_tg_reserved_characters("my name is vishal.")
+    \"my name is vishal\\.\"
+    """
+    reserved_characters = {".", "-"}
+    for char in reserved_characters:
+        msg = msg.replace(char, f"\\{char}")
+    return msg
+
+
 def send_message(message_content: str, chat_ids: list[str] = TELEGRAM_CHAT_IDS) -> bool:
     """
     Sends a message on Telegram with the given content and chat ID.
@@ -195,7 +220,7 @@ def send_message(message_content: str, chat_ids: list[str] = TELEGRAM_CHAT_IDS) 
     success = True
     for chat_id in chat_ids:
         request_body = {
-            "text": message_content,
+            "text": escape_tg_reserved_characters(message_content),
             "chat_id": chat_id,
             "parse_mode": "MarkdownV2",
         }
@@ -276,7 +301,7 @@ def send_message_with_files(
 
         for chat_id in chat_ids:
             request_body = {
-                "caption": caption,
+                "caption": escape_tg_reserved_characters(caption),
                 "chat_id": chat_id,
                 "parse_mode": "MarkdownV2",
             }
@@ -392,13 +417,11 @@ def get_telegram_caption(sgbs: list[SGB], n: int = 3) -> str:
 
     for sgb in sgbs[:n]:
         # Replacing . in XIRR  with \. since . is reserved for some reason in the markdown mode in Telegram API
-        text += f"\n\n`{sgb.nse_symbol}` \\- ₹{str(sgb.ltp).replace('.', '\\.')} \\- {str(sgb.xirr).replace('.', '\\.')}%"
+        text += f"\n\n`{sgb.nse_symbol}` \\- ₹{str(sgb.ltp)} \\- {str(sgb.xirr)}%"
 
     disclaimer_text = "\n[Disclaimers](https://github.com/vishalnandagopal/sgb-advisor/blob/master/README.md#disclaimers)"
 
-    gold_price_text = (
-        f"\nGold price \\- ₹{str(get_price_of_gold()).replace('.', '\\.')}"
-    )
+    gold_price_text = f"\nGold price \\- ₹{get_price_of_gold()}"
 
     text += gold_price_text + disclaimer_text
 

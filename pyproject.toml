@@ -9,23 +9,22 @@ requires-python = ">=3.13"
 dependencies = [
     "loguru>=0.7.3",
     "python-dotenv>=1.1.1",
-    "pyxirr>=0.10.6",
-    "requests>=2.32.4",
-    "boto3>=1.39.3",
-    "playwright>=1.53.0",
+    "pyxirr>=0.10.7",
+    "requests>=2.32.5",
+    "boto3>=1.40.27",
+    "playwright>=1.55.0",
 ]
 keywords = ["sovereign-gold-bonds", "sgb", "india-finance", "finance"]
 
 [dependency-groups]
 dev = [
-    "boto3-stubs>=1.39.3",
-    "icecream>=2.1.5",
-    "mypy>=1.16.1",
-    "pre-commit>=4.2.0",
-    "ruff>=0.12.2",
-    "ty>=0.0.1a13",
-    "types-requests>=2.32.4.20250611",
-    "uv>=0.7.19",
+    "boto3-stubs>=1.40.27",
+    "icecream>=2.1.7",
+    "pre-commit>=4.3.0",
+    "ruff>=0.12.12",
+    "ty>=0.0.1a20",
+    "types-requests>=2.32.4.20250809",
+    "uv>=0.8.16",
 ]
 build = ["hatch>=1.14.1"]
 
@@ -39,7 +38,7 @@ issues = "https://github.com/vishalnandagopal/sgb-advisor/issues"
 sgb-advisor = "sgb_advisor.__main__:main"
 
 [tool.uv]
-required-version = ">=0.7.12"
+required-version = ">=0.8.16"
 default-groups = "all"
 
 [tool.ruff.format]
