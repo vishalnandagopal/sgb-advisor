@@ -12,8 +12,8 @@ on:
       - "src/"
       - "requirements.txt"
       - ".python-version"
-  # schedule:
-  #   - cron: "30 4 * * 1-5" # Disabled till NSE allows foreign IPs again
+  schedule:
+    - cron: "30 4 * * 1-5"
   workflow_dispatch:
 
 jobs:
@@ -23,11 +23,11 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout the repo ⬇️
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
         with:
           fetch-depth: 1
       - name: Setup python and pip 🐍
-        uses: actions/setup-python@v5
+        uses: actions/setup-python@v6
         with:
           python-version-file: ".python-version"
           cache: "pip" # caching pip dependencies
@@ -55,4 +55,5 @@ jobs:
           SGB_AWS_REGION: ${{ vars.SGB_AWS_REGION }}
           SGB_MODE: ${{ vars.SGB_MODE }}
           SGB_LOG_LEVEL: ${{ vars.SGB_LOG_LEVEL }}
+          SGB_ALREADY_HELD_SGBS: ${{ secrets.SGB_ALREADY_HELD_SGBS }}
         run: python3 -B app.py

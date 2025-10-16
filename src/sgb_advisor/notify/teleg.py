@@ -28,6 +28,28 @@ TELEGRAM_CHAT_IDS: list[str] = getenv("SGB_TELEGRAM_CHAT_IDS", "").split(",")
 API_URL = f"https://api.telegram.org/bot{TELEGRAM_BOT_TOKEN}"
 """The API URL to use, pre-configured with the bot token"""
 
+RESERVED_CHARACTERS = {
+    "_",
+    "*",
+    "[",
+    "]",
+    "(",
+    ")",
+    "~",
+    "`",
+    ">",
+    "#",
+    "+",
+    "-",
+    "=",
+    "|",
+    "{",
+    "}",
+    ".",
+    "!",
+}
+# Characters that must be escaped before using it in a MarkdownV2 style message - https://core.telegram.org/bots/api#markdownv2-style
+
 
 def test_bot_status() -> bool:
     """
@@ -125,6 +147,30 @@ def validate_telegram_envs() -> bool:
     True
     """
     return test_bot_status() and check_chat_ids()
+
+
+def escape_reserved_characters(msg: str) -> str:
+    """
+    Escapes characters that are reserved in the telegram API
+
+    Parameters
+    ----------
+    msg: str
+        The message to process
+
+    Returns
+    -------
+    str
+        The message with reserved characters escaped
+
+    Examples
+    --------
+    >>> escape_reserved_characters("test.")
+    "test\\."
+    """
+    for char in RESERVED_CHARACTERS:
+        msg = msg.replace(char, f"\\{char}", -1)
+    return msg
 
 
 def create_and_send_message(
@@ -392,7 +438,7 @@ def get_telegram_caption(sgbs: list[SGB], n: int = 3) -> str:
 
     for sgb in sgbs[:n]:
         # Replacing . in XIRR  with \. since . is reserved for some reason in the markdown mode in Telegram API
-        text += f"\n\n`{sgb.nse_symbol}` \\- ₹{str(sgb.ltp).replace('.', '\\.')} \\- {str(sgb.xirr).replace('.', '\\.')}%"
+        text += f"\n\n`{escape_reserved_characters(sgb.nse_symbol)}` \\- ₹{escape_reserved_characters(str(sgb.ltp))} \\- {escape_reserved_characters(str(sgb.xirr))}%"
 
     disclaimer_text = "\n[Disclaimers](https://github.com/vishalnandagopal/sgb-advisor/blob/master/README.md#disclaimers)"
 

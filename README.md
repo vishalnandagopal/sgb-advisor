@@ -64,6 +64,9 @@ SGB_AWS_SECRET_ACCESS_KEY=xxx
 SGB_AWS_SES_SENDER_EMAIL=SGB Advisor <sgb-advisor@your-verified-domain.com>
 SGB_AWS_SES_RECIPIENT=example@example.com
 SGB_AWS_REGION=us-east-1
+
+# Highlights below mentioned SGBs in the screenshot for easier identification - Use NSE Scrip names from [scripts.csv](./src/sgb_advisor/assets/scrips.csv). Comma separated string
+SGB_ALREADY_HELD_SGBS=SGBAUG28V,SGBMAR28X
 ```
 
 ## Sending results to someone

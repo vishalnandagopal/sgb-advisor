@@ -4,6 +4,7 @@ Commons functions that can be used by all methods of notifications
 
 from datetime import datetime, timedelta, timezone
 from functools import lru_cache
+from os import getenv
 from os.path import dirname
 from pathlib import Path
 from random import randint
@@ -16,6 +17,9 @@ from ..models import SGB
 
 tmp_folder = Path(f"{gettempdir()}/sgb_advisor")
 tmp_folder.mkdir(parents=True, exist_ok=True)
+
+SGB_ALREADY_HELD_SGBS: list[str] = str(getenv("SGB_ALREADY_HELD_SGBS", "")).split(",")
+"""List of SGBs already held, which will be highlited in the screenshot"""
 
 
 def get_temp_file_path(file_extension: Optional[str] = "html") -> Path:
@@ -48,6 +52,10 @@ def get_temp_file_path(file_extension: Optional[str] = "html") -> Path:
     return p
 
 
+def get_sgb_symbol_css() -> str:
+    return 'style="color: red;"'
+
+
 def get_table_row_html(sgb: SGB) -> str:
     """
     Get a <tr> element that can be used in any HTML template
@@ -73,7 +81,7 @@ def get_table_row_html(sgb: SGB) -> str:
     """
 
     return f"""<tr>
-        <td>{sgb.nse_symbol}</td>
+        <td {get_sgb_symbol_css() if sgb.nse_symbol in SGB_ALREADY_HELD_SGBS else ""}>{sgb.nse_symbol}</td>
         <td>{sgb.ltp}</td>
         <td>{sgb.maturity_date.day} {sgb.maturity_date.strftime("%B %Y")}</td>
         <td>{sgb.xirr}</td>
