@@ -34,7 +34,7 @@ You can use any of the 3 methods given below
 
     ```sh
     # Setup .env in same folder
-    docker run --env-file .env ghcr.io/vishalnandagopal/sgb-advisor:latest
+    docker container run --env-file .env --pull always ghcr.io/vishalnandagopal/sgb-advisor:latest
     ```
 
 3. ~~Github actions~~
@@ -49,7 +49,8 @@ You can use any of the 3 methods given below
 Place the required env variables in an [`.env`](.env) file.
 
 ```env
-# How to notify the user. Accepted values are "telegram", "email" or "both"
+# How to notify the user. Accepted values are "telegram", "email", "both" or "none".
+# Use "none" if you just want to run the program and generate results
 SGB_MODE=telegram
 SGB_LOG_LEVEL=info
 

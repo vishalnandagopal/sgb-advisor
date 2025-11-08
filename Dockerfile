@@ -1,5 +1,5 @@
 ARG IMAGE_PLATFORM=linux/amd64
-ARG BASEIMAGE=docker.io/library/python:3.13-slim-bookworm
+ARG BASEIMAGE=docker.io/library/python:3.14-slim-bookworm
 
 FROM --platform=${IMAGE_PLATFORM} $BASEIMAGE AS final
 
@@ -16,11 +16,7 @@ RUN ["pip", "install", "-r", "requirements.txt"]
 
 RUN ["playwright", "install", "--with-deps", "firefox"]
 
-COPY LICENSE LICENSE
-COPY README.md README.md
-
-COPY src/sgb_advisor src/sgb_advisor
-COPY app.py app.py
+COPY . .
 
 LABEL \
     org.opencontainers.image.title="SGB Advisor" \

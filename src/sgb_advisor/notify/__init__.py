@@ -19,7 +19,7 @@ NONE_MODE: str = "none"
 
 def notify(sgbs: list[SGB]) -> None:
     """
-    Tries to guess which channel(s) to notify the user through. Reads the "MODE" environment variable first. If empty, it tries to guess it by reading other environment variables like TELEGRAM_BOT_TOKEN and AWS_ACCESS_KEY
+    Send notifications via all set modes.
 
     Parameters
     ----------
