@@ -17,6 +17,7 @@ NSE_SGB_URL = "https://www.nseindia.com/market-data/sovereign-gold-bond"
 
 # RBI uses IBJA
 IBJA_URL = "https://www.ibja.co/"
+IBJA_BACKUP_URL = "https://ibjarates.com/"
 
 
 class SiteNotLoadedError(PlaywrightTimeoutError):
@@ -63,7 +64,7 @@ def read_scrips_file() -> list[list[str]]:
 @lru_cache(maxsize=None)
 def run_in_headless_mode() -> bool:
     """
-    Returns whether the script should run in headless mode or not. Uses the SGB_HEADLESS_MODE environment variable to determine this.
+    Returns whether the script should run in headless mode or not. Uses the SGB_HEADED_MODE environment variable to determine this.
 
     Parameters
     ----------
@@ -72,20 +73,21 @@ def run_in_headless_mode() -> bool:
     Returns
     -------
     bool
-        True if the script should run in headless mode, False otherwise. Defaults to True.
+        `True` if the script should run in headless mode, `False` otherwise. Defaults to `True`.
 
     Examples
     --------
     >>> run_in_headless_mode()
     True
     """
-    headless_mode = getenv("SGB_HEADLESS_MODE", "true").casefold() != "false"
+    headed_mode = getenv("SGB_HEADED_MODE", "false").casefold() == "true"
     logger.debug(
-        "Running playwright in headless mode"
-        if {headless_mode}
-        else "Running playwright in headed mode"
+        "Running playwright in headed mode"
+        if {headed_mode}
+        else "Running playwright in headless mode"
     )
-    return headless_mode
+    # opposite to return headless mode state
+    return not headed_mode
 
 
 def get_sgbs_from_nse_site(n_th: Optional[int] = 1) -> list[SGB]:
@@ -267,12 +269,63 @@ def fetch_price_of_gold_from_ibja(n_th: Optional[int] = 1) -> float:
             page.wait_for_selector(FINE_GOLD_PRICE_QUERY_SEL, timeout=50000)
         except PlaywrightTimeoutError:
             msg: str = (
-                f"could not fetch SGBs info from NSE site - tried {n_th} times(s)"
+                f"could not fetch price of gold from {IBJA_URL} - tried {n_th} times(s)"
             )
             logger.warning(msg)
             raise SiteNotLoadedError(msg)
 
         _gold_price_element = page.query_selector(selector=FINE_GOLD_PRICE_QUERY_SEL)
+
+        _gold_price_str = (
+            _gold_price_element.text_content() if _gold_price_element else ""
+        )
+
+        browser.close()
+
+    gold_price = (
+        float(_gold_price_str.replace("₹", "").strip()) if _gold_price_str else -1
+    )
+    return gold_price
+
+
+def fetch_price_of_gold_from_ibja_backup(n_th: Optional[int] = 1) -> float:
+    """
+    Fetches the price of gold using the playwright library, from the site at IBJA_BACKUP_URL
+
+    Parameters
+    ----------
+    n_th : Optional[int]
+        The nth try going on. Used to print along with the logs. Defaults to 1
+
+    Returns
+    -------
+    float
+        The price of gold
+
+    Examples
+    --------
+    >>> fetch_price_of_gold_from_ibja_backup()
+    7956.00
+    """
+    with sync_playwright() as p:
+        browser = p.firefox.launch(headless=run_in_headless_mode())
+        page = browser.new_page(java_script_enabled=False)
+
+        logger.info(f"fetching IBJA page at {IBJA_BACKUP_URL} - {n_th} time")
+        page.goto(IBJA_BACKUP_URL, timeout=100000)
+
+        GOLD_PRICE_QUERY_SEL = "#GoldRatesCompare999"
+        # No need to wait for selector since IBJA_BACKUP_URL returns the price in the inital HTML load itself
+        # try:
+        #     page.wait_for_selector(GOLD_PRICE_QUERY_SEL, timeout=50000)
+        # except PlaywrightTimeoutError:
+        #     msg: str = (
+        #         f"could not fetch price from {IBJA_BACKUP_URL} - tried {n_th} times(s)"
+        #     )
+        #     logger.warning(msg)
+        #     raise SiteNotLoadedError(msg)
+
+        _gold_price_element = page.query_selector(selector=GOLD_PRICE_QUERY_SEL)
 
         _gold_price_str = (
             _gold_price_element.text_content() if _gold_price_element else ""
@@ -315,7 +368,10 @@ def get_price_of_gold() -> float:
         try:
             gold_price = fetch_price_of_gold_from_ibja(i)
         except SiteNotLoadedError:
-            pass
+            try:
+                gold_price = fetch_price_of_gold_from_ibja_backup(i)
+            except SiteNotLoadedError:
+                pass
 
     if not gold_price:
         msg = "could not fetch gold price from IBJA"

@@ -39,18 +39,42 @@ jobs:
           export GITHUB_REPOSITORY_URL="${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}"
           export DOCKER_BUILD_GIT_COMMIT=`git rev-parse HEAD`
           export DOCKER_BUILD_SHORT_GIT_COMMIT=`git rev-parse --short HEAD`
-          export DOCKER_BUILD_TIME=`date --rfc-3339=seconds`
 
-          docker buildx build \
-          --label "org.opencontainers.image.created=${DOCKER_BUILD_TIME}" \
-          --label "org.opencontainers.image.revision=${DOCKER_BUILD_GIT_COMMIT}" \
-          --tag "ghcr.io/${GITHUB_REPOSITORY}:latest" \
-          --tag "ghcr.io/${GITHUB_REPOSITORY}:${SGB_ADVISOR_RELEASE_VERSION}" \
-          --tag "ghcr.io/${GITHUB_REPOSITORY}:${DOCKER_BUILD_SHORT_GIT_COMMIT}" \
-          --tag "ghcr.io/${GITHUB_REPOSITORY}:${DOCKER_BUILD_GIT_COMMIT}" \
-          --file Dockerfile \
-          .
+          export PYTHON_VERSION_EXTRACTION_REGEX="s/.*\">=(3\.[0-9]+).*/\1/"
+
+          # Extract recommended python version
+          export SGB_RECOMMENDED_PYTHON_VERSION=`cat .python-version | sed -E ${PYTHON_VERSION_EXTRACTION_REGEX}`
+
+          # Extract lowest supported python version and publish an image for it too cuz why not
+          export SGB_LOWEST_PYTHON_VERSION=`grep -m1 'requires-python' pyproject.toml | sed -E ${PYTHON_VERSION_EXTRACTION_REGEX}`
+
+          echo "The recommended Python version is ${SGB_RECOMMENDED_PYTHON_VERSION}"
+          echo "The oldest Python version supported by ${GITHUB_REPOSITORY} is ${SGB_OLDEST_PYTHON_VERSION}"
+
+          # Array of recommended and lowest supported python versions
+          PYTHON_VERSIONS_TO_BUILD=("${SGB_RECOMMENDED_PYTHON_VERSION}" "${SGB_LOWEST_PYTHON_VERSION}")
+
+          for PYTHON_VERSION in "${PYTHON_VERSIONS_TO_BUILD[@]}"; do
+            echo "Building docker image for Python ${PYTHON_VERSION}..."
+
+            export DOCKER_BUILD_TIME=`date --rfc-3339=seconds`
+
+            docker buildx build \
+              --build-arg "PYTHON_VERSION=${PYTHON_VERSION}" \
+              --label "org.opencontainers.image.created=${DOCKER_BUILD_TIME}" \
+              --label "org.opencontainers.image.revision=${DOCKER_BUILD_GIT_COMMIT}" \
+              --tag "ghcr.io/${GITHUB_REPOSITORY}:${PYTHON_VERSION}-latest" \
+              --tag "ghcr.io/${GITHUB_REPOSITORY}:${PYTHON_VERSION}-${SGB_ADVISOR_RELEASE_VERSION}" \
+              --tag "ghcr.io/${GITHUB_REPOSITORY}:${PYTHON_VERSION}-${DOCKER_BUILD_SHORT_GIT_COMMIT}" \
+              --tag "ghcr.io/${GITHUB_REPOSITORY}:${PYTHON_VERSION}-${DOCKER_BUILD_GIT_COMMIT}" \
+              --file Dockerfile \
+              .
+
+            echo "Successfully built docker image for Python ${PYTHON_VERSION}."
+          done
+
+          docker image tag "ghcr.io/${GITHUB_REPOSITORY}:${SGB_RECOMMENDED_PYTHON_VERSION}-latest" "ghcr.io/${GITHUB_REPOSITORY}:latest"
 
           docker image ls --all
 
-          docker push --all-tags "ghcr.io/${GITHUB_REPOSITORY}"
+          docker image push --all-tags "ghcr.io/${GITHUB_REPOSITORY}"

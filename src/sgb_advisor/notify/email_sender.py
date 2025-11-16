@@ -54,10 +54,11 @@ def get_email_body_plain_text(sgbs: list[SGB]):
 
     SGBSEP27 - Issued at ₹5400 - LTP ₹7900.02 - 2.5% interest - 2024-09-01"
     """
+    NEW_LINE = "\n"
     body_text = (
         "You can consider the following SGBs\n"
         + "THIS IS NOT INVESTMENT ADVICE. IT CAN BE WRONG, DUE TO DATA, CALCULATION, TIMING OR ANY OTHER ERRORS. DO YOUR OWN RESEARCH. PROFITS ARE NOT GUARANTEED, LOSSES CAN BE UPTO 100%!\n"
-        + f"{'\n'.join(str(sgb) for sgb in sgbs)}"
+        + f"{NEW_LINE.join(str(sgb) for sgb in sgbs)}"
     )
     return body_text
 

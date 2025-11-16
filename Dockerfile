@@ -1,5 +1,6 @@
+ARG PYTHON_VERSION=3.14
 ARG IMAGE_PLATFORM=linux/amd64
-ARG BASEIMAGE=docker.io/library/python:3.14-slim-bookworm
+ARG BASEIMAGE=docker.io/library/python:${PYTHON_VERSION}-slim-trixie
 
 FROM --platform=${IMAGE_PLATFORM} $BASEIMAGE AS final
 
@@ -27,4 +28,6 @@ LABEL \
     org.opencontainers.image.documentation="https://github.com/vishalnandagopal/sgb-advisor/blob/master/README.md#running-the-app" \
     org.opencontainers.image.licenses="GPL-3.0-only"
 
-ENTRYPOINT ["python3", "app.py"]
+# -B - don't generate .pyc files
+# -u - unbuffered output
+ENTRYPOINT ["python3", "-Bu", "app.py"]

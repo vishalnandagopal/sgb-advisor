@@ -238,6 +238,8 @@ def send_message(message_content: str, chat_ids: list[str] = TELEGRAM_CHAT_IDS) 
 
     API_METHOD = "sendMessage"
 
+    message_content = escape_reserved_characters(message_content)
+
     success = True
     for chat_id in chat_ids:
         request_body = {
@@ -307,6 +309,7 @@ def send_message_with_files(
         photo_captions = [photo_captions[0] * len(files)]
 
     for file, caption in zip(files, photo_captions):
+        caption = escape_reserved_characters(caption)
         file_id = ""
         if file.suffix not in [".png", ".json"]:
             msg = f'Only json and png files are allowed. "{file.suffix}" format not allowed.'
@@ -438,13 +441,11 @@ def get_telegram_caption(sgbs: list[SGB], n: int = 3) -> str:
 
     for sgb in sgbs[:n]:
         # Replacing . in XIRR  with \. since . is reserved for some reason in the markdown mode in Telegram API
-        text += f"\n\n`{escape_reserved_characters(sgb.nse_symbol)}` \\- ₹{escape_reserved_characters(str(sgb.ltp))} \\- {escape_reserved_characters(str(sgb.xirr))}%"
+        text += f"\n\n`{sgb.nse_symbol}` - ₹{sgb.ltp} - {sgb.xirr}%"
 
     disclaimer_text = "\n[Disclaimers](https://github.com/vishalnandagopal/sgb-advisor/blob/master/README.md#disclaimers)"
 
-    gold_price_text = (
-        f"\nGold price \\- ₹{str(get_price_of_gold()).replace('.', '\\.')}"
-    )
+    gold_price_text = f"\nGold price - ₹{get_price_of_gold()}"
 
     text += gold_price_text + disclaimer_text
 

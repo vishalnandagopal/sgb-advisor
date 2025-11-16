@@ -56,4 +56,6 @@ jobs:
           SGB_MODE: ${{ vars.SGB_MODE }}
           SGB_LOG_LEVEL: ${{ vars.SGB_LOG_LEVEL }}
           SGB_ALREADY_HELD_SGBS: ${{ secrets.SGB_ALREADY_HELD_SGBS }}
-        run: python3 -B app.py
+        # -B - don't generate .pyc files
+        # -u - unbuffered output
+        run: python3 -Bu app.py

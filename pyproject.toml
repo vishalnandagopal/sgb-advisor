@@ -1,33 +1,33 @@
 [project]
 name = "sgb-advisor"
-version = "0.2.1"
+version = "0.2.4"
 description = "A tool to analyse Sovereign Gold Bonds and compare their yields."
 readme = "README.md"
 authors = [{ name = "Vishal Nandagopal", email = "dev@vishalnandagopal.com" }]
 license = "GPL-3.0-only"
-requires-python = ">=3.14"
+requires-python = ">=3.10"
 dependencies = [
     "loguru>=0.7.3",
     "python-dotenv>=1.2.1",
     "pyxirr>=0.10.8",
     "requests>=2.32.5",
-    "boto3>=1.40.69",
-    "playwright>=1.55.0",
+    "boto3>=1.40.74",
+    "playwright>=1.56.0",
 ]
 keywords = ["sovereign-gold-bonds", "sgb", "india-finance", "finance"]
 
 [dependency-groups]
 dev = [
-    "boto3-stubs>=1.40.69",
+    "boto3-stubs>=1.40.74",
     "icecream>=2.1.8",
     "mypy>=1.18.2",
-    "pre-commit>=4.3.0",
-    "ruff>=0.14.4",
-    "ty>=0.0.1a25",
+    "pre-commit>=4.4.0",
+    "ruff>=0.14.5",
+    "ty>=0.0.1a26",
     "types-requests>=2.32.4.20250913",
-    "uv>=0.9.8",
+    "uv>=0.9.9",
 ]
-build = ["uv_build>=0.9.8"]
+build = ["uv_build>=0.9.9"]
 
 [project.urls]
 homepage = "https://github.com/vishalnandagopal/sgb-advisor"
@@ -39,7 +39,7 @@ issues = "https://github.com/vishalnandagopal/sgb-advisor/issues"
 sgb-advisor = "sgb_advisor.__main__:main"
 
 [tool.uv]
-required-version = ">=0.9.3"
+required-version = ">=0.9.9"
 default-groups = "all"
 
 [tool.ruff.format]
@@ -47,7 +47,7 @@ docstring-code-format = true
 docstring-code-line-length = 100
 
 [build-system]
-requires = ["uv_build>=0.9.8,<0.10.0"]
+requires = ["uv_build>=0.9.9,<0.10.0"]
 build-backend = "uv_build"
 
 [tool.uv.build-backend]
@@ -57,6 +57,4 @@ source-include = [
     "src/sgb_advisor/assets/telegram_template.html",
     "src/sgb_advisor/**/*.py",
 ]
-sources-exclude = [
-    "**.env"
-]
+sources-exclude = ["**.env"]
