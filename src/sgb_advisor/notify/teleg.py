@@ -36,7 +36,7 @@ RESERVED_CHARACTERS = {
     "(",
     ")",
     "~",
-    "`",
+    # "`", # Disabled because it breaks code blocks in captions
     ">",
     "#",
     "+",

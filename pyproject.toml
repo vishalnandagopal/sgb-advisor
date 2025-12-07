@@ -11,23 +11,24 @@ dependencies = [
     "python-dotenv>=1.2.1",
     "pyxirr>=0.10.8",
     "requests>=2.32.5",
-    "boto3>=1.40.74",
+    "boto3>=1.42.4",
     "playwright>=1.56.0",
 ]
 keywords = ["sovereign-gold-bonds", "sgb", "india-finance", "finance"]
 
 [dependency-groups]
 dev = [
-    "boto3-stubs>=1.40.74",
+    "boto3-stubs>=1.42.4",
     "icecream>=2.1.8",
-    "mypy>=1.18.2",
-    "pre-commit>=4.4.0",
-    "ruff>=0.14.5",
-    "ty>=0.0.1a26",
+    "mypy>=1.19.0",
+    "pre-commit>=4.5.0",
+    "pytest>=9.0.2",
+    "ruff>=0.14.8",
+    "ty>=0.0.1a32",
     "types-requests>=2.32.4.20250913",
-    "uv>=0.9.9",
+    "uv>=0.9.16",
 ]
-build = ["uv_build>=0.9.9"]
+build = ["uv_build>=0.9.16"]
 
 [project.urls]
 homepage = "https://github.com/vishalnandagopal/sgb-advisor"
@@ -39,7 +40,7 @@ issues = "https://github.com/vishalnandagopal/sgb-advisor/issues"
 sgb-advisor = "sgb_advisor.__main__:main"
 
 [tool.uv]
-required-version = ">=0.9.9"
+required-version = ">=0.9.16"
 default-groups = "all"
 
 [tool.ruff.format]
@@ -47,7 +48,7 @@ docstring-code-format = true
 docstring-code-line-length = 100
 
 [build-system]
-requires = ["uv_build>=0.9.9,<0.10.0"]
+requires = ["uv_build>=0.9.16,<0.10.0"]
 build-backend = "uv_build"
 
 [tool.uv.build-backend]

@@ -9,7 +9,7 @@ updates:
     directory: "/" # Location of package manifests
     schedule:
       interval: "cron"
-      cronjob: "30 10 05 7/6 *"
+      cronjob: "45 10 05 */3 *"
     groups:
       version-update-group:
         applies-to: version-updates
