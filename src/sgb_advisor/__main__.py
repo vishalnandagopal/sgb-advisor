@@ -4,7 +4,7 @@ from pathlib import Path
 from dotenv import load_dotenv
 
 
-def runner():
+def runner() -> None:
     # Need to load dotenv before importing/running any module file, since they use API keys from env modules
     SGB_ENV_FILE_PATH: Path = Path(
         getenv("SGB_ENV_FILE_PATH", str(Path.cwd() / ".env"))

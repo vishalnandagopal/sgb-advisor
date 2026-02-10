@@ -25,7 +25,7 @@ class SiteNotLoadedError(PlaywrightTimeoutError):
     Separate error class to use when site doesn't load, to avoid catching other types of errors. The NSE site fails to load a lot of times
     """
 
-    def __init__(self, message):
+    def __init__(self, message: str) -> None:
         super().__init__(message)
 
 

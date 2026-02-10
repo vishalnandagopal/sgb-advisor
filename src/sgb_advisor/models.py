@@ -20,7 +20,7 @@ class SGB:
         issue_price: float | int,
         interest_rate: float | int,
         maturity_date: date,
-    ):
+    ) -> None:
         """
         Initialize an SGB class
 

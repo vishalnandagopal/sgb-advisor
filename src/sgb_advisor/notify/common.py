@@ -202,7 +202,7 @@ def write_html_output(sgbs: list[SGB]) -> Path:
     return write_html_to_file(html)
 
 
-def generate_html_from_template(sgbs: list[SGB]):
+def generate_html_from_template(sgbs: list[SGB]) -> str:
     STRING_TO_REPLACE_IN_TEMPLATE = (
         '<section id="app-generated-results-placeholder"></section>'
     )

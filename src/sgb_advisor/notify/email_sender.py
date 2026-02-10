@@ -34,7 +34,7 @@ CHARSET: str = "UTF-8"
 """The character encoding for the email."""
 
 
-def get_email_body_plain_text(sgbs: list[SGB]):
+def get_email_body_plain_text(sgbs: list[SGB]) -> str:
     """
     Get text that shows the trading symbols, maturity dates, XIRR of each SGBs
 
@@ -86,7 +86,7 @@ def send_mail(sgbs: list[SGB]) -> bool:
     )
 
 
-def send_aws_email(email_html: str, email_plain_text: str):
+def send_aws_email(email_html: str, email_plain_text: str) -> bool:
     required_envs = {
         AWS_ACCESS_KEY,
         AWS_SECRET_ACCESS_KEY,
