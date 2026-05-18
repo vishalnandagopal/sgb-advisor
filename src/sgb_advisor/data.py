@@ -110,7 +110,6 @@ def get_sgbs_from_nse_site(n_th: Optional[int] = 1) -> list[SGB]:
     [SGB1, SGB2]
     """
     with sync_playwright() as p:
-        # Was firefox before, but NSE website is very buggy with it
         browser = p.firefox.launch(headless=run_in_headless_mode())
         page = browser.new_page()
         current_user_agent: str = page.evaluate("navigator.userAgent")
