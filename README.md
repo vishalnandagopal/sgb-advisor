@@ -8,7 +8,7 @@ This tool tries to use publically available data and ✨maths✨ to advise you o
 
 **This does not recommend anything. Calculations, data or something else can be wrong. Do your own research before investing your money anywhere.**
 
-~~**Demo**: Output is being sent in [this](https://t.me/sgb_advisor) public Telegram channel at ~10:00 AM IST every weekday!~~
+**Demo**: Output is being sent in [this](https://t.me/sgb_advisor) public Telegram channel at ~10:00 AM IST every weekday!
 
 ## Tools used:
 
@@ -37,9 +37,7 @@ You can use any of the 3 methods given below
     docker container run --env-file .env --pull always ghcr.io/vishalnandagopal/sgb-advisor:latest
     ```
 
-3. ~~Github actions~~
-
-**This is not working now as NSE has blocked IPs outside India from accessing its website [since May 2025](https://web.archive.org/web/20250508075217/https://economictimes.indiatimes.com/markets/stocks/news/bse-nse-restrict-access-to-websites-for-overseas-users-reports/articleshow/120955528.cms) and Github Action run on American servers.**
+3. Github actions
 
 -   An action is already setup [here](./.github/workflows/sgb_advisor.yaml).
 -   Fork the repo, enable the action in repo settings, setup the required GitHub secrets, vars & envs.

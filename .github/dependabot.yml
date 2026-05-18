@@ -12,6 +12,6 @@ updates:
       cronjob: "45 10 05 */3 *"
     groups:
       version-update-group:
-        applies-to: version-updates
+        applies-to: security-updates
         patterns:
           - "*" # Wildcard
