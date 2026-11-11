@@ -1,0 +1,6 @@
+rules:
+  unpinned-uses:
+    disable: false
+    config:
+      policies:
+        actions/*: ref-pin

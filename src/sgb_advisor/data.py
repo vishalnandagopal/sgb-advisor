@@ -8,16 +8,21 @@ from typing import Optional
 from playwright.sync_api import ElementHandle
 from playwright.sync_api import TimeoutError as PlaywrightTimeoutError
 from playwright.sync_api import sync_playwright
+from requests import get as r_get
 
 from .logg import logger
 from .models import SGB
 from .quick_mafs import calculate_sgb_xirr
 
 NSE_SGB_URL = "https://www.nseindia.com/market-data/sovereign-gold-bond"
+NSE_API_URL = "https://www.nseindia.com/api/NextApi/apiClient/marketWatchApi?functionName=getSGBData"
 
 # RBI uses IBJA
 IBJA_URL = "https://www.ibja.co/"
 IBJA_BACKUP_URL = "https://ibjarates.com/"
+
+# NSE API fails without a user agent
+USER_AGENT = "SGB Advisor/1.0"
 
 
 class SiteNotLoadedError(PlaywrightTimeoutError):
@@ -88,6 +93,126 @@ def run_in_headless_mode() -> bool:
     )
     # opposite to return headless mode state
     return not headed_mode
+
+
+def get_sgbs_from_nse_api(n_th: Optional[int] = 1) -> list[SGB]:
+    logger.info(f"fetching SGBs info from NSE API at {NSE_API_URL} - {n_th} time(s)")
+    res = r_get(
+        NSE_API_URL,
+        headers={"User-Agent": USER_AGENT},
+    )
+
+    logger.info(f"fetched SGBs info from NSE API - status: {res.status_code}")
+
+    if res.status_code != 200:
+        logger.error(
+            f"could not fetch SGBs info from NSE API - status: {res.status_code}"
+        )
+        raise RuntimeError(
+            f"could not fetch SGBs info from NSE API - status: {res.status_code}"
+        )
+
+    """
+    response format
+
+    {
+    "data": {
+        "aduCount": {
+            "unchange": 7,
+            "advances": 4,
+            "declines": 34
+        },
+        "data": [
+            {
+                "symbol": "SGBFEB32IV",
+                "series": "GB",
+                "identifier": "SGBFEB32IVGBN",
+                "open": 15730,
+                "dayHigh": 15898.98,
+                "dayLow": 15531.01,
+                "issue_price": 6213,
+                "lastPrice": 15835,
+                "change": -153.07,
+                "pChange": -0.96,
+                "totalTradedVolume": 1190,
+                "totalTradedValue": 18739989.1,
+                "yearHigh": 21475,
+                "yearLow": 12838,
+                "xDt": null,
+                "cAct": null,
+                "yPC": 19.080295538718957,
+                "mPC": 2.8363612748201907,
+                "previousClose": 15988.07,
+                "stockIndClosePrice": 0,
+                "perChange365d": 18.33,
+                "perChange30d": 3.09,
+                "date365dAgo": "12-Sep-2025",
+                "date30dAgo": "14-Aug-2026",
+                "nearWKH": 26.263096623981372,
+                "nearWKL": -23.344757750428414,
+                "companyName": "SOVEREIGN GOLD BONDS 2.50% FEBRUARY 2032 SR-IV 2023-24",
+                "PChange": -0.96
+            },
+            {
+                "symbol": "SGBJUN31I",
+                "series": "GB",
+                "identifier": "SGBJUN31IGBN",
+                "open": 15339.83,
+                "dayHigh": 15396.6,
+                "dayLow": 15100,
+                "issue_price": 5876,
+                "lastPrice": 15325,
+                "change": -64.99,
+                "pChange": -0.42,
+                "totalTradedVolume": 777,
+                "totalTradedValue": 11807175.45,
+                "yearHigh": 19150.02,
+                "yearLow": 11895.88,
+                "xDt": null,
+                "cAct": null,
+                "yPC": 22.2300828771805,
+                "mPC": 0.4453020437751474,
+                "previousClose": 15389.99,
+                "stockIndClosePrice": 0,
+                "perChange365d": 20.9,
+                "perChange30d": 0.57,
+                "date365dAgo": "12-Sep-2025",
+                "date30dAgo": "14-Aug-2026",
+                "nearWKH": 19.973973917520713,
+                "nearWKL": -28.826114587571496,
+                "companyName": "SOVEREIGN GOLD BONDS 2.50% JUNE 2031 SR-I 2023-24",
+                "PChange": -0.42
+            }
+        ],
+        "marketStatus": {
+            "market": "CMOT",
+            "marketStatus": "Closed",
+            "marketStatusMessage": "Normal Market is Closed"
+        },
+        "totals": {
+            "volume": 8868,
+            "value": 134841322.74
+        },
+        "timestamp": "11-Sep-2026 16:00:00"
+    }
+}
+    """
+    data = res.json().get("data", {}).get("data", [])
+    logger.info(f"{len(data)} SGBs found in NSE API response")
+
+    sgbs: list[SGB] = list()
+
+    for row in data:
+        sgb = SGB(
+            nse_symbol=row.get("symbol"),
+            ltp=row.get("lastPrice"),
+            issue_price=row.get("issue_price"),
+            interest_rate=2.5 if row.get("issue_price") > 5400 else 2.75,
+            maturity_date=datetime.strptime(row.get("date365dAgo"), "%d-%b-%Y").date(),
+        )
+        sgbs.append(sgb)
+        logger.debug(f"added {sgb.nse_symbol} from NSE API to sgbs list - {sgb}")
+    return sgbs
 
 
 def get_sgbs_from_nse_site(n_th: Optional[int] = 1) -> list[SGB]:
@@ -217,7 +342,7 @@ def get_sgbs() -> list[SGB]:
     while not sgbs_trading and i < 10:
         i += 1
         try:
-            sgbs_trading = get_sgbs_from_nse_site(i)
+            sgbs_trading = get_sgbs_from_nse_api(i)
         except SiteNotLoadedError:
             pass
 
