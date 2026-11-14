@@ -76,6 +76,7 @@ jobs:
           done
 
           docker image tag "ghcr.io/${GITHUB_REPOSITORY}:${SGB_RECOMMENDED_PYTHON_VERSION}-latest" "ghcr.io/${GITHUB_REPOSITORY}:latest"
+          docker image tag "ghcr.io/${GITHUB_REPOSITORY}:${SGB_RECOMMENDED_PYTHON_VERSION}-latest" "ghcr.io/${GITHUB_REPOSITORY}:${SGB_ADVISOR_RELEASE_VERSION}"
 
           docker image ls --all
 

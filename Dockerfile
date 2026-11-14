@@ -7,7 +7,9 @@ FROM --platform=${IMAGE_PLATFORM} $BASEIMAGE AS final
 RUN apt-get clean && \
     apt-get update && \
     apt-get upgrade --yes && \
-    apt-get autoremove --yes
+    apt-get install -y --no-install-recommends libatomic1 && \
+    apt-get autoremove --yes && \
+    rm -rf /var/lib/apt/lists/*
 
 WORKDIR /sgb_advisor_runtime
 
